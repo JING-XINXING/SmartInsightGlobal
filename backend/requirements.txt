@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+asyncpg
+pydantic-settings
+python-dotenv
+redis
+celery
+feedparser
+httpx
+beautifulsoup4
+python-multipart
+alembic @ file:///home/conda/feedstock_root/build_artifacts/alembic_1760257481429/work
