@@ -3,6 +3,7 @@ from app.core.celery_app import celery_app
 from app.core.crawler import crawler
 from app.core.logger import logger
 from app.core.analyzer import news_analyzer
+from app.core.scheduler_config import scheduler_config
 from app.db.session import AsyncSessionLocal
 from app.crud.crud_news import create_news_if_not_exists
 from app.schemas.news import NewsCreate
@@ -15,10 +16,27 @@ async def fetch_and_save_feeds_async():
     """
     # List of feeds to crawl
     feeds = [
+        # Major Global News
         "http://feeds.bbci.co.uk/news/world/rss.xml",
         "https://www.aljazeera.com/xml/rss/all.xml",
         "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
-        "https://www.theguardian.com/world/rss"
+        "https://www.theguardian.com/world/rss",
+        "https://feeds.reuters.com/reuters/worldNews",
+        "https://apnews.com/hub/world-news.rss",
+        "http://rss.cnn.com/rss/edition_world.rss",
+        "https://www.cnbc.com/id/100727362/device/rss/rss.html",
+        "https://feeds.washingtonpost.com/rss/world",
+        
+        # European & Asian Perspectives
+        "https://www.dw.com/en/top-stories/s-9097/rss.xml",
+        "https://www.france24.com/en/rss",
+        "https://www3.nhk.or.jp/nhkworld/en/news/list.xml",
+        "https://www.scmp.com/rss/2/feed",
+        "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms",
+        
+        # Tech & Finance
+        "https://techcrunch.com/feed/",
+        "https://www.economist.com/the-world-this-week/rss.xml"
     ]
     
     logger.info(f"Starting news fetch task for {len(feeds)} feeds")
@@ -61,15 +79,20 @@ async def fetch_and_save_feeds_async():
 
 async def analyze_unanalyzed_news_async():
     """
-    Analyze news articles that haven't been analyzed yet.
+    分析未处理的新闻文章
+    使用 AI 进行情感分析、关键词提取和分类
     """
-    logger.info("Starting AI analysis task for unanalyzed news")
+    logger.info("开始 AI 分析任务...")
     analyzed_count = 0
     
+    # 从配置中获取批次大小
+    config = scheduler_config.get_config()
+    batch_size = config.get("analyze_batch_size", 50)
+    
     async with AsyncSessionLocal() as db:
-        # Find news without analysis
+        # 查找未分析的新闻
         result = await db.execute(
-            select(News).where(News.sentiment_score == None).limit(10)
+            select(News).where(News.sentiment_score == None).limit(batch_size)
         )
         news_list = result.scalars().all()
         
@@ -137,11 +160,39 @@ def analyze_news_task(self):
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     """
-    Setup periodic tasks for Celery Beat.
+    设置 Celery Beat 定时任务
+    从 Redis 配置中读取任务频率
     """
-    logger.info("Setting up periodic tasks")
-    # Fetch news every 60 minutes
-    sender.add_periodic_task(3600.0, fetch_news_task.s(), name='fetch-news-every-hour')
-    # Analyze news every 30 minutes
-    sender.add_periodic_task(1800.0, analyze_news_task.s(), name='analyze-news-every-30min')
-    logger.info("Periodic tasks configured: fetch-news-every-hour, analyze-news-every-30min")
+    logger.info("正在设置定时任务...")
+    
+    # 从配置中获取频率设置
+    config = scheduler_config.get_config()
+    fetch_interval = scheduler_config.get_fetch_interval_seconds()
+    analyze_interval = scheduler_config.get_analyze_interval_seconds()
+    
+    logger.info(f"当前配置: 采集间隔={config['fetch_interval_hours']}小时, "
+                f"分析间隔={config['analyze_interval_minutes']}分钟")
+    
+    # 设置新闻采集定时任务
+    if config.get("fetch_enabled", True):
+        sender.add_periodic_task(
+            fetch_interval,
+            fetch_news_task.s(),
+            name=f'fetch-news-every-{config["fetch_interval_hours"]}h'
+        )
+        logger.info(f"已启用新闻采集任务: 每 {config['fetch_interval_hours']} 小时执行")
+    else:
+        logger.info("新闻采集任务已禁用")
+    
+    # 设置新闻分析定时任务
+    if config.get("analyze_enabled", True):
+        sender.add_periodic_task(
+            analyze_interval,
+            analyze_news_task.s(),
+            name=f'analyze-news-every-{config["analyze_interval_minutes"]}min'
+        )
+        logger.info(f"已启用新闻分析任务: 每 {config['analyze_interval_minutes']} 分钟执行")
+    else:
+        logger.info("新闻分析任务已禁用")
+    
+    logger.info("定时任务配置完成")

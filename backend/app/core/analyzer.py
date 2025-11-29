@@ -4,6 +4,8 @@ import re
 from app.core.llm_client import llm_client
 from app.core.logger import logger
 
+import random
+
 class NewsAnalyzer:
     """
     Analyze news articles using LLM for sentiment analysis and keyword extraction.
@@ -17,6 +19,10 @@ class NewsAnalyzer:
             Sentiment score from -100 (very negative) to 100 (very positive)
             0 is neutral
         """
+        # Select a random provider
+        providers = llm_client.get_available_providers()
+        provider = random.choice(providers)
+        
         prompt = f"""分析以下新闻的情感倾向，并给出一个-100到100之间的分数：
 - -100表示极度负面（如灾难、战争、死亡）
 - 0表示中性
@@ -35,6 +41,7 @@ class NewsAnalyzer:
         try:
             response = await llm_client.chat_completion(
                 messages=messages,
+                provider=provider,
                 temperature=0.3,
                 max_tokens=10
             )
@@ -74,9 +81,14 @@ class NewsAnalyzer:
             {"role": "user", "content": prompt}
         ]
         
+        # Select a random provider
+        providers = llm_client.get_available_providers()
+        provider = random.choice(providers)
+        
         try:
             response = await llm_client.chat_completion(
                 messages=messages,
+                provider=provider,
                 temperature=0.3,
                 max_tokens=100
             )
@@ -122,9 +134,14 @@ class NewsAnalyzer:
             {"role": "user", "content": prompt}
         ]
         
+        # Select a random provider
+        providers = llm_client.get_available_providers()
+        provider = random.choice(providers)
+        
         try:
             response = await llm_client.chat_completion(
                 messages=messages,
+                provider=provider,
                 temperature=0.2,
                 max_tokens=10
             )
