@@ -18,6 +18,7 @@ class News(Base):
     sentiment_score = Column(Integer, nullable=True) # -100 to 100
     keywords = Column(JSON, nullable=True)
     category = Column(String, nullable=True)
+    location = Column(JSON, nullable=True)  # {"country": "...", "city": "...", "lat": ..., "lng": ...}
 
 class Source(Base):
     __tablename__ = "sources"

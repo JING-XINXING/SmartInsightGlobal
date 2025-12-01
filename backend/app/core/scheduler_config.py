@@ -24,7 +24,8 @@ class SchedulerConfig:
         "analyze_interval_minutes": 30,  # 新闻分析间隔（分钟）
         "fetch_enabled": True,           # 是否启用自动采集
         "analyze_enabled": True,         # 是否启用自动分析
-        "analyze_batch_size": 50         # 每次分析的新闻数量
+        "analyze_batch_size": 50,        # 每次分析的新闻数量
+        "backup_enabled": True           # 是否启用自动备份
     }
     
     def __init__(self):
@@ -116,6 +117,10 @@ class SchedulerConfig:
             val = int(config["analyze_batch_size"])
             validated["analyze_batch_size"] = max(10, min(100, val))
         
+        # 备份启用状态
+        if "backup_enabled" in config:
+            validated["backup_enabled"] = bool(config["backup_enabled"])
+        
         return validated
     
     def get_fetch_interval_seconds(self) -> float:
@@ -135,6 +140,10 @@ class SchedulerConfig:
     def is_analyze_enabled(self) -> bool:
         """是否启用自动分析"""
         return self.get_config()["analyze_enabled"]
+    
+    def is_backup_enabled(self) -> bool:
+        """是否启用自动备份"""
+        return self.get_config()["backup_enabled"]
 
 
 # 全局实例

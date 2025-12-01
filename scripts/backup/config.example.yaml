@@ -1,0 +1,43 @@
+# SmartInsight Global - 备份配置文件
+# 复制此文件为 config.yaml 并填写实际配置
+
+# 存储提供商: local, oss, s3
+provider: local
+
+# 本地备份目录
+backup_dir: ~/backups/smartinsight
+
+# 云端保留天数
+retention_days: 30
+
+# ==================== 本地存储配置 ====================
+# 用于测试，将备份复制到另一个本地目录
+local:
+  path: /tmp/smartinsight_cloud_backups
+
+# ==================== 阿里云 OSS 配置 ====================
+# provider 设置为 'oss' 时生效
+oss:
+  access_key_id: your_access_key_id
+  access_key_secret: your_access_key_secret
+  endpoint: https://oss-cn-hangzhou.aliyuncs.com
+  bucket: your-bucket-name
+  prefix: smartinsight/backups/
+
+# ==================== AWS S3 配置 ====================
+# provider 设置为 's3' 时生效
+s3:
+  access_key_id: your_aws_access_key
+  access_key_secret: your_aws_secret_key
+  region: us-east-1
+  bucket: your-bucket-name
+  prefix: smartinsight/backups/
+
+# ==================== 腾讯云 COS 配置 ====================
+# 暂未实现，可参考 S3 兼容 API
+# cos:
+#   secret_id: your_secret_id
+#   secret_key: your_secret_key
+#   region: ap-guangzhou
+#   bucket: your-bucket-name
+#   prefix: smartinsight/backups/

@@ -116,7 +116,7 @@ class LLMClient:
         api_key = getattr(settings, api_key_name, None)
         
         # 选择模型：优先使用参数指定的，其次使用用户配置的，最后使用厂商默认
-        if not model:
+        if model is None:
             if self.default_model and provider_name == self.default_provider:
                 model = self.default_model
             else:

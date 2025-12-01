@@ -158,9 +158,69 @@ class NewsAnalyzer:
         
         return "其他"
     
-    async def analyze_news_full(self, title: str, content: str) -> Dict:
+    async def extract_location(self, title: str, content: str) -> Optional[Dict]:
         """
-        Perform full analysis: sentiment + keywords + category.
+        从新闻中提取地理位置信息
+        
+        Returns:
+            Dict with location info: {"country": "...", "city": "...", "lat": ..., "lng": ...}
+            如果无法提取位置，返回 None
+        """
+        prompt = f"""分析以下新闻，提取其中提到的主要地理位置信息。
+
+新闻标题：{title}
+新闻内容：{content[:500]}
+
+请以JSON格式返回，包含以下字段：
+- country: 国家名称（英文）
+- country_cn: 国家名称（中文）
+- city: 城市名称（英文，如无明确城市可为空字符串）
+- lat: 纬度（数字）
+- lng: 经度（数字）
+
+如果新闻中没有明确的地理位置，返回：{{"country": "", "country_cn": "", "city": "", "lat": 0, "lng": 0}}
+
+只返回JSON对象，不要有其他文字。"""
+
+        messages = [
+            {"role": "system", "content": "你是一个专业的地理位置提取助手，熟悉全球主要国家和城市的地理坐标。"},
+            {"role": "user", "content": prompt}
+        ]
+        
+        # Select a random provider
+        providers = llm_client.get_available_providers()
+        provider = random.choice(providers)
+        
+        try:
+            response = await llm_client.chat_completion(
+                messages=messages,
+                provider=provider,
+                temperature=0.2,
+                max_tokens=150
+            )
+            
+            if response:
+                # Try to parse JSON
+                match = re.search(r'\{.*?\}', response, re.DOTALL)
+                if match:
+                    location = json.loads(match.group())
+                    if isinstance(location, dict) and location.get("country"):
+                        logger.info(f"Extracted location: {location.get('country')}, {location.get('city')}")
+                        return location
+                        
+        except Exception as e:
+            logger.error(f"Error in location extraction: {e}", exc_info=True)
+        
+        return None
+
+    async def analyze_news_full(self, title: str, content: str, extract_location: bool = False) -> Dict:
+        """
+        Perform full analysis: sentiment + keywords + category + location.
+        
+        Args:
+            title: 新闻标题
+            content: 新闻内容
+            extract_location: 是否提取地理位置（可选，默认否）
         
         Returns:
             Dict with analysis results
@@ -170,28 +230,32 @@ class NewsAnalyzer:
         results = {
             "sentiment_score": None,
             "keywords": None,
-            "category": None
+            "category": None,
+            "location": None
         }
         
         # Run analyses in parallel for efficiency
         import asyncio
-        sentiment_task = self.analyze_sentiment(title, content)
-        keywords_task = self.extract_keywords(title, content)
-        category_task = self.categorize_news(title, content)
+        tasks = [
+            self.analyze_sentiment(title, content),
+            self.extract_keywords(title, content),
+            self.categorize_news(title, content)
+        ]
         
-        sentiment, keywords, category = await asyncio.gather(
-            sentiment_task,
-            keywords_task,
-            category_task,
-            return_exceptions=True
-        )
+        if extract_location:
+            tasks.append(self.extract_location(title, content))
         
-        if not isinstance(sentiment, Exception):
-            results["sentiment_score"] = sentiment
-        if not isinstance(keywords, Exception):
-            results["keywords"] = keywords
-        if not isinstance(category, Exception):
-            results["category"] = category
+        results_list = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        # Unpack results
+        if not isinstance(results_list[0], Exception):
+            results["sentiment_score"] = results_list[0]
+        if not isinstance(results_list[1], Exception):
+            results["keywords"] = results_list[1]
+        if not isinstance(results_list[2], Exception):
+            results["category"] = results_list[2]
+        if extract_location and len(results_list) > 3 and not isinstance(results_list[3], Exception):
+            results["location"] = results_list[3]
         
         logger.info(f"Full analysis completed: {results}")
         return results

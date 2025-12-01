@@ -1,5 +1,9 @@
 import asyncio
+import subprocess
+import os
+from pathlib import Path
 from app.core.celery_app import celery_app
+from app.core.config import settings
 from app.core.crawler import crawler
 from app.core.logger import logger
 from app.core.analyzer import news_analyzer
@@ -9,6 +13,9 @@ from app.crud.crud_news import create_news_if_not_exists
 from app.schemas.news import NewsCreate
 from sqlalchemy.future import select
 from app.models.news import News
+
+# 备份脚本路径
+BACKUP_SCRIPT = Path(__file__).parent.parent.parent.parent / "scripts" / "backup" / "backup_local.sh"
 
 async def fetch_and_save_feeds_async():
     """
@@ -102,10 +109,11 @@ async def analyze_unanalyzed_news_async():
             try:
                 logger.info(f"Analyzing news ID {news_item.id}: {news_item.title[:50]}...")
                 
-                # Perform AI analysis
+                # Perform AI analysis (with location extraction enabled)
                 analysis = await news_analyzer.analyze_news_full(
                     news_item.title,
-                    news_item.content or news_item.summary
+                    news_item.content or news_item.summary,
+                    extract_location=True  # 启用地理位置提取
                 )
                 
                 # Update news with analysis results
@@ -115,6 +123,8 @@ async def analyze_unanalyzed_news_async():
                     news_item.keywords = analysis["keywords"]
                 if analysis.get("category"):
                     news_item.category = analysis["category"]
+                if analysis.get("location"):
+                    news_item.location = analysis["location"]
                 
                 await db.commit()
                 analyzed_count += 1
@@ -157,6 +167,64 @@ def analyze_news_task(self):
         logger.error(f"Celery task 'analyze_news_task' failed: {e}", exc_info=True)
         raise self.retry(exc=e, countdown=60 * (2 ** self.request.retries))
 
+
+@celery_app.task(acks_late=True, bind=True, max_retries=2)
+def backup_database_task(self):
+    """
+    Celery task to backup the database.
+    执行本地数据库备份，可选上传到云端。
+    """
+    try:
+        logger.info("Celery task 'backup_database_task' started")
+        
+        # 检查备份脚本是否存在
+        if not BACKUP_SCRIPT.exists():
+            logger.error(f"备份脚本不存在: {BACKUP_SCRIPT}")
+            return {"success": False, "error": "backup script not found"}
+        
+        # 执行备份脚本（不需要参数，脚本使用默认配置）
+        result = subprocess.run(
+            [str(BACKUP_SCRIPT)],
+            capture_output=True,
+            text=True,
+            timeout=600,  # 10 分钟超时
+            env={**os.environ, "POSTGRES_PASSWORD": settings.POSTGRES_PASSWORD or ""}
+        )
+        
+        if result.returncode == 0:
+            logger.info(f"数据库备份成功:\n{result.stdout}")
+            
+            # 尝试上传到云端 (可选)
+            try:
+                upload_script = BACKUP_SCRIPT.parent / "backup_upload.py"
+                if upload_script.exists():
+                    config_file = BACKUP_SCRIPT.parent / "config.yaml"
+                    if config_file.exists():
+                        upload_result = subprocess.run(
+                            ["python3", str(upload_script), "upload", "-c", str(config_file)],
+                            capture_output=True,
+                            text=True,
+                            timeout=300
+                        )
+                        if upload_result.returncode == 0:
+                            logger.info(f"云端同步成功:\n{upload_result.stdout}")
+                        else:
+                            logger.warning(f"云端同步失败: {upload_result.stderr}")
+            except Exception as e:
+                logger.warning(f"云端同步异常 (忽略): {e}")
+            
+            return {"success": True, "output": result.stdout}
+        else:
+            logger.error(f"数据库备份失败: {result.stderr}")
+            return {"success": False, "error": result.stderr}
+            
+    except subprocess.TimeoutExpired:
+        logger.error("备份任务超时")
+        raise self.retry(exc=Exception("backup timeout"), countdown=300)
+    except Exception as e:
+        logger.error(f"Celery task 'backup_database_task' failed: {e}", exc_info=True)
+        raise self.retry(exc=e, countdown=300)
+
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     """
@@ -194,5 +262,17 @@ def setup_periodic_tasks(sender, **kwargs):
         logger.info(f"已启用新闻分析任务: 每 {config['analyze_interval_minutes']} 分钟执行")
     else:
         logger.info("新闻分析任务已禁用")
+    
+    # 设置数据库备份定时任务 (每天凌晨 2:00 执行)
+    if config.get("backup_enabled", True):
+        from celery.schedules import crontab
+        sender.add_periodic_task(
+            crontab(hour=2, minute=0),  # 每天凌晨 2:00
+            backup_database_task.s(),
+            name='backup-database-daily-2am'
+        )
+        logger.info("已启用数据库备份任务: 每天凌晨 2:00 执行")
+    else:
+        logger.info("数据库备份任务已禁用")
     
     logger.info("定时任务配置完成")

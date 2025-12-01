@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # 测试数据库
+  test-db:
+    image: postgres:15-alpine
+    container_name: smartinsight-test-db
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test_smartinsight
+    ports:
+      - "5433:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+    tmpfs:
+      - /tmp
+
+  # 测试Redis
+  test-redis:
+    image: redis:7-alpine
+    container_name: smartinsight-test-redis
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes
+
+  # 测试后端服务
+  test-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    container_name: smartinsight-test-backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test:test@test-db:5432/test_smartinsight
+      REDIS_HOST: test-redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://test-redis:6379/1
+      TEST_DATABASE_URL: postgresql+asyncpg://test:test@test-db:5432/test_smartinsight
+      TEST_MODE: "true"
+      LOG_LEVEL: "DEBUG"
+    ports:
+      - "8001:8000"
+    depends_on:
+      test-db:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__  # 避免缓存问题
+    command: >
+      sh -c "
+        echo 'Waiting for database...';
+        while ! pg_isready -h test-db -p 5432 -U test; do
+          sleep 1;
+        done;
+        echo 'Database is ready!';
+
+        echo 'Running database migrations...';
+        alembic upgrade head;
+
+        echo 'Running tests...';
+        pytest tests/ -v --cov=app --cov-report=xml --cov-report=html --cov-report=term-missing;
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  test_postgres_data:
+
+networks:
+  default:
+    driver: bridge

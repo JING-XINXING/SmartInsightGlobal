@@ -17255,3 +17255,32 @@ Traceback (most recent call last):
   File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/asyncio/base_events.py", line 1130, in create_connection
     raise OSError('Multiple exceptions: {}'.format(
 OSError: Multiple exceptions: [Errno 61] Connect call failed ('::1', 5432, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 5432)
+2025-11-29 11:00:19 - smartinsight - ERROR - Error in location extraction: Expecting value: line 5 column 10 (char 85)
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 206, in extract_location
+    location = json.loads(match.group())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 5 column 10 (char 85)
+2025-11-29 11:00:43 - smartinsight - ERROR - Error in location extraction: Expecting property name enclosed in double quotes: line 7 column 1 (char 101)
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 206, in extract_location
+    location = json.loads(match.group())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/json/decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 7 column 1 (char 101)
