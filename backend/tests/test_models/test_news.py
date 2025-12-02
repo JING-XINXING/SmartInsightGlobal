@@ -11,7 +11,7 @@ from app.models.news import News
 class TestNewsModel:
     """测试新闻模型"""
 
-    def test_news_creation(self, db_session):
+    async def test_news_creation(self, db_session):
         """测试新闻创建"""
         news = News(
             title="测试新闻标题",
@@ -39,7 +39,7 @@ class TestNewsModel:
         assert news.category == "科技"
         assert news.created_at is not None
 
-    def test_news_creation_minimal(self, db_session):
+    async def test_news_creation_minimal(self, db_session):
         """测试最小新闻创建"""
         news = News(
             title="最小新闻",
@@ -60,7 +60,7 @@ class TestNewsModel:
         assert news.category is None
         assert news.created_at is not None
 
-    def test_news_unique_url_constraint(self, db_session):
+    async def test_news_unique_url_constraint(self, db_session):
         """测试URL唯一约束"""
         # 第一条新闻
         news1 = News(
@@ -84,7 +84,7 @@ class TestNewsModel:
         with pytest.raises(IntegrityError):
             await db_session.commit()
 
-    def test_news_different_urls(self, db_session):
+    async def test_news_different_urls(self, db_session):
         """测试不同URL可以创建"""
         news1 = News(
             title="新闻1",
@@ -107,7 +107,7 @@ class TestNewsModel:
         assert news2.id is not None
         assert news1.id != news2.id
 
-    def test_news_with_publish_date(self, db_session):
+    async def test_news_with_publish_date(self, db_session):
         """测试带发布日期的新闻创建"""
         publish_date = datetime(2024, 1, 1, 12, 0, 0)
         news = News(
@@ -124,7 +124,7 @@ class TestNewsModel:
 
         assert news.publish_date == publish_date
 
-    def test_news_with_keywords(self, db_session):
+    async def test_news_with_keywords(self, db_session):
         """测试带关键词的新闻创建"""
         keywords = ["人工智能", "技术", "创新", "未来", "发展"]
         news = News(
@@ -141,7 +141,7 @@ class TestNewsModel:
 
         assert news.keywords == keywords
 
-    def test_news_with_location(self, db_session):
+    async def test_news_with_location(self, db_session):
         """测试带位置信息的新闻创建"""
         location = {
             "country": "美国",
@@ -164,7 +164,7 @@ class TestNewsModel:
 
         assert news.location == location
 
-    def test_news_sentiment_score_range(self, db_session):
+    async def test_news_sentiment_score_range(self, db_session):
         """测试情感分数范围"""
         # 测试有效范围
         valid_scores = [-100, -50, 0, 50, 100]
@@ -178,10 +178,10 @@ class TestNewsModel:
             await db_session.commit()
             await db_session.refresh(news)
             assert news.sentiment_score == score
-            db_session.delete(news)
+            await db_session.delete(news)
             await db_session.commit()
 
-    def test_news_string_fields_length(self, db_session):
+    async def test_news_string_fields_length(self, db_session):
         """测试字符串字段长度"""
         # 测试非常长的标题
         long_title = "a" * 1000
@@ -198,7 +198,7 @@ class TestNewsModel:
         # 应该成功存储（PostgreSQL支持长文本）
         assert len(news.title) == 1000
 
-    def test_news_json_fields(self, db_session):
+    async def test_news_json_fields(self, db_session):
         """测试JSON字段"""
         # 测试复杂的关键词
         complex_keywords = [
@@ -232,12 +232,12 @@ class TestNewsModel:
         }
         news.location = complex_location
 
-        db_session.commit()
+        await db_session.commit()
         await db_session.refresh(news)
 
         assert news.location == complex_location
 
-    def test_news_update(self, db_session):
+    async def test_news_update(self, db_session):
         """测试新闻更新"""
         # 创建新闻
         news = News(
@@ -270,7 +270,7 @@ class TestNewsModel:
         assert news.keywords == ["更新", "关键词"]
         assert news.category == "更新分类"
 
-    def test_news_delete(self, db_session):
+    async def test_news_delete(self, db_session):
         """测试新闻删除"""
         # 创建新闻
         news = News(
@@ -294,7 +294,7 @@ class TestNewsModel:
         deleted_news = await db_session.get(News, news_id)
         assert deleted_news is None
 
-    def test_news_query_by_source(self, db_session, sample_news):
+    async def test_news_query_by_source(self, db_session, sample_news):
         """测试按来源查询新闻"""
         from sqlalchemy.future import select
 
@@ -309,7 +309,7 @@ class TestNewsModel:
         for news in news_list:
             assert news.source == "Test News"
 
-    def test_news_query_by_category(self, db_session, sample_news):
+    async def test_news_query_by_category(self, db_session, sample_news):
         """测试按分类查询新闻"""
         from sqlalchemy.future import select
 
@@ -324,7 +324,7 @@ class TestNewsModel:
         for news in news_list:
             assert news.category == "科技"
 
-    def test_news_query_with_sentiment_filter(self, db_session, sample_news):
+    async def test_news_query_with_sentiment_filter(self, db_session, sample_news):
         """测试带情感过滤的新闻查询"""
         from sqlalchemy.future import select
 
@@ -339,7 +339,7 @@ class TestNewsModel:
         for news in news_list:
             assert news.sentiment_score > 0
 
-    def test_news_query_ordering(self, db_session, sample_news):
+    async def test_news_query_ordering(self, db_session, sample_news):
         """测试新闻排序查询"""
         from sqlalchemy.future import select
         from sqlalchemy import desc
@@ -354,7 +354,7 @@ class TestNewsModel:
         for i in range(len(news_list) - 1):
             assert news_list[i].created_at >= news_list[i + 1].created_at
 
-    def test_news_partial_update(self, db_session):
+    async def test_news_partial_update(self, db_session):
         """测试部分更新新闻"""
         # 创建新闻
         news = News(
@@ -380,7 +380,7 @@ class TestNewsModel:
         assert news.title == "原始标题"  # 未更新
         assert news.content == original_content  # 未更新
 
-    def test_news_json_field_types(self, db_session):
+    async def test_news_json_field_types(self, db_session):
         """测试JSON字段类型"""
         # 测试关键词作为列表
         news_with_list_keywords = News(
@@ -408,7 +408,7 @@ class TestNewsModel:
         assert isinstance(news_with_list_keywords.keywords, list)
         assert isinstance(news_with_object_keywords.keywords, dict)
 
-    def test_news_with_null_fields(self, db_session):
+    async def test_news_with_null_fields(self, db_session):
         """测试空字段处理"""
         news = News(
             title="空字段测试",

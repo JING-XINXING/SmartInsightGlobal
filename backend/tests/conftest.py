@@ -1,56 +1,181 @@
 """
-pytest 配置文件
-定义测试fixture和共享配置
+测试配置和共享 fixtures
 """
-
 import pytest
+import pytest_asyncio
 import asyncio
-from typing import AsyncGenerator, Any
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import AsyncGenerator, Generator
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.pool import NullPool
 from httpx import AsyncClient
 
-# 导入共享fixture
-from . import db_session, client, sample_news, sample_source
+from app.main import app
+from app.db.base import Base
+from app.core.config import settings
 
-# 异步测试支持
+# 测试数据库 URL
+TEST_DATABASE_URL = "postgresql+asyncpg://test_user:test_password@localhost:5432/test_smartinsight"
+
+
 @pytest.fixture(scope="session")
-def event_loop():
-    """创建事件循环用于异步测试"""
+def event_loop() -> Generator:
+    """创建事件循环"""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
-# 测试标记
-pytest_plugins = []
 
-# 自定义标记
-def pytest_configure(config):
-    """配置pytest标记"""
-    config.addinivalue_line(
-        "markers", "unit: 单元测试 - 快速执行，不依赖外部服务"
-    )
-    config.addinivalue_line(
-        "markers", "integration: 集成测试 - 需要数据库或外部服务"
-    )
-    config.addinivalue_line(
-        "markers", "api: API测试 - 测试HTTP端点"
-    )
-    config.addinivalue_line(
-        "markers", "slow: 慢速测试 - 执行时间较长"
+@pytest_asyncio.fixture(scope="session")
+async def test_engine():
+    """创建测试数据库引擎"""
+    engine = create_async_engine(
+        TEST_DATABASE_URL,
+        poolclass=NullPool,
+        echo=False,
     )
 
-# 测试收集设置
-collect_ignore_glob = [
-    "*/migrations/*",
-    "*/venv/*",
-    "*/__pycache__/*"
-]
+    # 创建所有表
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
 
-# 异步测试支持
-@pytest.hookimpl(tryfirst=True)
-def pytest_pyfunc_call(pyfuncitem):
-    """支持异步测试函数"""
-    if asyncio.iscoroutinefunction(pyfuncitem.function):
-        pyfuncitem.function = pytest.mark.asyncio(pyfuncitem.function)
-        return False
-    return True
+    yield engine
+
+    # 清理
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
+    await engine.dispose()
+
+
+@pytest_asyncio.fixture
+async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
+    """创建数据库会话"""
+    async_session_maker = async_sessionmaker(
+        test_engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+    )
+
+    async with async_session_maker() as session:
+        yield session
+        await session.rollback()
+
+
+@pytest_asyncio.fixture
+async def client() -> AsyncGenerator[AsyncClient, None]:
+    """创建测试客户端"""
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac
+
+
+@pytest.fixture
+def mock_llm_response():
+    """模拟 LLM 响应"""
+    return {
+        "sentiment_score": 50,
+        "keywords": ["test", "keyword", "example"],
+        "category": "Technology",
+        "location": {
+            "country": "United States",
+            "city": "New York"
+        }
+    }
+
+
+@pytest.fixture
+def sample_news_data():
+    """示例新闻数据"""
+    return {
+        "title": "Test News Article",
+        "content": "This is a test news article content for testing purposes.",
+        "summary": "Test summary",
+        "source": "Test Source",
+        "url": "https://example.com/test-news",
+        "publish_date": "2025-12-02T10:00:00Z"
+    }
+
+
+@pytest.fixture
+def sample_rss_feed():
+    """示例 RSS Feed 数据"""
+    return """<?xml version="1.0" encoding="UTF-8"?>
+    <rss version="2.0">
+        <channel>
+            <title>Test RSS Feed</title>
+            <link>https://example.com</link>
+            <description>Test RSS Feed Description</description>
+            <item>
+                <title>Test Article 1</title>
+                <link>https://example.com/article1</link>
+                <description>Test article 1 description</description>
+                <pubDate>Mon, 02 Dec 2025 10:00:00 GMT</pubDate>
+            </item>
+            <item>
+                <title>Test Article 2</title>
+                <link>https://example.com/article2</link>
+                <description>Test article 2 description</description>
+                <pubDate>Mon, 02 Dec 2025 11:00:00 GMT</pubDate>
+            </item>
+        </channel>
+    </rss>"""
+
+
+@pytest_asyncio.fixture(scope="function")
+async def sample_news(db_session):
+    """创建示例新闻数据用于测试"""
+    from app.models.news import News
+    from datetime import datetime
+    from sqlalchemy import select
+
+    # 清理现有数据
+    await db_session.execute(select(News).where(News.url.like("%example.com%")))
+    await db_session.commit()
+
+    # 创建测试数据
+    sample_data = [
+        News(
+            title="Test News Article 1",
+            content="This is a test news article about technology.",
+            summary="Test summary for tech article",
+            source="Test News",
+            url="https://example.com/tech-news-1",
+            publish_date=datetime(2025, 12, 2, 10, 0, 0),
+            category="科技",
+            sentiment_score=75,
+            keywords=["technology", "innovation"],
+            location_data={"country": "United States", "city": "San Francisco"}
+        ),
+        News(
+            title="Test News Article 2",
+            content="This is a test news article about business.",
+            summary="Test summary for business article",
+            source="Test News",
+            url="https://example.com/business-news-1",
+            publish_date=datetime(2025, 12, 2, 11, 0, 0),
+            category="商业",
+            sentiment_score=25,
+            keywords=["business", "economy"],
+            location_data={"country": "United States", "city": "New York"}
+        ),
+        News(
+            title="Test News Article 3",
+            content="This is another test news article about technology.",
+            summary="Test summary for another tech article",
+            source="Test News",
+            url="https://example.com/tech-news-2",
+            publish_date=datetime(2025, 12, 2, 12, 0, 0),
+            category="科技",
+            sentiment_score=50,
+            keywords=["technology", "AI"],
+            location_data={"country": "China", "city": "Beijing"}
+        )
+    ]
+
+    # 添加到数据库
+    for news in sample_data:
+        db_session.add(news)
+
+    await db_session.commit()
+
+    return sample_data

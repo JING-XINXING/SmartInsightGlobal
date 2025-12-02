@@ -23766,3 +23766,447 @@ FROM news ORDER BY news.publish_date DESC
  LIMIT $1::INTEGER OFFSET $2::INTEGER
 2025-12-01 11:39:20 - sqlalchemy.engine.Engine - INFO - [cached since 8602s ago] (20, 0)
 2025-12-01 11:39:20 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 22:49:22 - smartinsight - INFO - 正在设置定时任务...
+2025-12-01 22:49:22 - smartinsight - INFO - 当前配置: 采集间隔=6小时, 分析间隔=120分钟
+2025-12-01 22:49:22 - smartinsight - INFO - 已启用新闻采集任务: 每 6 小时执行
+2025-12-01 22:49:22 - smartinsight - INFO - 已启用新闻分析任务: 每 120 分钟执行
+2025-12-01 22:49:22 - smartinsight - INFO - 已启用数据库备份任务: 每天凌晨 2:00 执行
+2025-12-01 22:49:22 - smartinsight - INFO - 定时任务配置完成
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-01 22:53:10 - sqlalchemy.engine.Engine - INFO - [generated in 0.00033s] ()
+2025-12-01 22:53:11 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 22:53:11 - sqlalchemy.engine.Engine - INFO - [generated in 0.00032s] (20, 0)
+2025-12-01 22:53:11 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 22:53:14 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 22:53:14 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-01 22:53:14 - sqlalchemy.engine.Engine - INFO - [cached since 3.892s ago] ()
+2025-12-01 22:53:14 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 22:53:14 - sqlalchemy.engine.Engine - INFO - [cached since 3.856s ago] (20, 0)
+2025-12-01 22:53:14 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 22:56:28 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 22:56:28 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 22:56:28 - sqlalchemy.engine.Engine - INFO - [cached since 197.9s ago] (2000, 0)
+2025-12-01 22:56:29 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 22:56:29 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 22:56:29 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 22:56:29 - sqlalchemy.engine.Engine - INFO - [cached since 198.1s ago] (2000, 0)
+2025-12-01 22:56:29 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 22:57:18 - smartinsight - INFO - 调度器配置已更新: {'fetch_interval_hours': 1, 'analyze_interval_minutes': 30, 'fetch_enabled': True, 'analyze_enabled': True, 'analyze_batch_size': 50, 'backup_enabled': True}
+2025-12-01 22:57:18 - smartinsight - INFO - 调度器配置已更新: {'fetch_interval_hours': 1, 'analyze_interval_minutes': 30, 'fetch_enabled': True, 'analyze_enabled': True, 'analyze_batch_size': 50}
+2025-12-01 22:57:36 - smartinsight - INFO - 正在设置定时任务...
+2025-12-01 22:57:36 - smartinsight - INFO - 当前配置: 采集间隔=1小时, 分析间隔=30分钟
+2025-12-01 22:57:36 - smartinsight - INFO - 已启用新闻采集任务: 每 1 小时执行
+2025-12-01 22:57:36 - smartinsight - INFO - 已启用新闻分析任务: 每 30 分钟执行
+2025-12-01 22:57:36 - smartinsight - INFO - 已启用数据库备份任务: 每天凌晨 2:00 执行
+2025-12-01 22:57:36 - smartinsight - INFO - 定时任务配置完成
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - [cached since 1082s ago] ()
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - [cached since 1082s ago] (20, 0)
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - [cached since 1082s ago] ()
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - [cached since 1082s ago] (20, 0)
+2025-12-01 23:11:13 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 23:11:15 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 23:11:15 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-01 23:11:15 - sqlalchemy.engine.Engine - INFO - [cached since 1085s ago] ()
+2025-12-01 23:11:15 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 23:11:15 - sqlalchemy.engine.Engine - INFO - [cached since 1085s ago] (20, 0)
+2025-12-01 23:11:16 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-01 23:11:17 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-01 23:11:17 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-01 23:11:17 - sqlalchemy.engine.Engine - INFO - [cached since 1087s ago] ()
+2025-12-01 23:11:17 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-01 23:11:17 - sqlalchemy.engine.Engine - INFO - [cached since 1087s ago] (20, 0)
+2025-12-01 23:11:17 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 00:22:01 - smartinsight - INFO - 正在设置定时任务...
+2025-12-02 00:22:01 - smartinsight - INFO - 当前配置: 采集间隔=1小时, 分析间隔=30分钟
+2025-12-02 00:22:01 - smartinsight - INFO - 已启用新闻采集任务: 每 1 小时执行
+2025-12-02 00:22:01 - smartinsight - INFO - 已启用新闻分析任务: 每 30 分钟执行
+2025-12-02 00:22:01 - smartinsight - INFO - 已启用数据库备份任务: 每天凌晨 2:00 执行
+2025-12-02 00:22:01 - smartinsight - INFO - 定时任务配置完成
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - select pg_catalog.version()
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - select current_schema()
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - show standard_conforming_strings
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - [generated in 0.00026s] ()
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - [generated in 0.00070s] (20, 0)
+2025-12-02 09:42:55 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 09:44:07 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 09:44:07 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 09:44:07 - sqlalchemy.engine.Engine - INFO - [cached since 71.53s ago] ()
+2025-12-02 09:44:07 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 09:44:07 - sqlalchemy.engine.Engine - INFO - [cached since 71.49s ago] (20, 0)
+2025-12-02 09:44:07 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 13:52:36 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 13:52:36 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 13:52:36 - sqlalchemy.engine.Engine - INFO - [cached since 1.498e+04s ago] (100, 0)
+2025-12-02 13:52:37 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 13:52:47 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 13:52:47 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 13:52:47 - sqlalchemy.engine.Engine - INFO - [cached since 1.499e+04s ago] (1, 0)
+2025-12-02 13:52:47 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 13:52:53 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 13:52:53 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 13:52:53 - sqlalchemy.engine.Engine - INFO - [cached since 1.5e+04s ago] (2000, 0)
+2025-12-02 13:52:53 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 13:54:40 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 13:54:40 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 13:54:40 - sqlalchemy.engine.Engine - INFO - [cached since 1.511e+04s ago] ()
+2025-12-02 13:54:40 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 13:54:40 - sqlalchemy.engine.Engine - INFO - [cached since 1.511e+04s ago] (20, 0)
+2025-12-02 13:54:41 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 13:54:57 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 13:54:57 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 13:54:57 - sqlalchemy.engine.Engine - INFO - [cached since 1.512e+04s ago] (5, 0)
+2025-12-02 13:54:57 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 13:56:13 - smartinsight - INFO - 正在设置定时任务...
+2025-12-02 13:56:13 - smartinsight - INFO - 当前配置: 采集间隔=1小时, 分析间隔=30分钟
+2025-12-02 13:56:13 - smartinsight - INFO - 已启用新闻采集任务: 每 1 小时执行
+2025-12-02 13:56:13 - smartinsight - INFO - 已启用新闻分析任务: 每 30 分钟执行
+2025-12-02 13:56:13 - smartinsight - INFO - 已启用数据库备份任务: 每天凌晨 2:00 执行
+2025-12-02 13:56:13 - smartinsight - INFO - 定时任务配置完成
+2025-12-02 13:56:52 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 13:56:52 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 13:56:52 - sqlalchemy.engine.Engine - INFO - [cached since 1.524e+04s ago] (2000, 0)
+2025-12-02 13:56:52 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:22 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:22 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:00:22 - sqlalchemy.engine.Engine - INFO - [cached since 1.545e+04s ago] ()
+2025-12-02 14:00:23 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:00:23 - sqlalchemy.engine.Engine - INFO - [cached since 1.545e+04s ago] (20, 0)
+2025-12-02 14:00:23 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:28 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:28 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:00:28 - sqlalchemy.engine.Engine - INFO - [cached since 1.545e+04s ago] (2000, 0)
+2025-12-02 14:00:29 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:29 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:29 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:00:29 - sqlalchemy.engine.Engine - INFO - [cached since 1.545e+04s ago] (2000, 0)
+2025-12-02 14:00:29 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:33 - smartinsight - INFO - LLM 配置已更新: provider=moonshot, model=默认
+2025-12-02 14:00:33 - smartinsight - INFO - LLM 配置已更新: provider=moonshot, model=moonshot-v1-8k
+2025-12-02 14:00:35 - smartinsight - INFO - LLM 配置已更新: provider=moonshot, model=moonshot-v1-128k
+2025-12-02 14:00:35 - smartinsight - INFO - LLM 配置已更新: provider=moonshot, model=moonshot-v1-128k
+2025-12-02 14:00:41 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:41 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:00:41 - sqlalchemy.engine.Engine - INFO - [cached since 1.547e+04s ago] (2000, 0)
+2025-12-02 14:00:41 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - [cached since 1.547e+04s ago] ()
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - [cached since 1.547e+04s ago] (20, 0)
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - [cached since 1.547e+04s ago] ()
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - [cached since 1.547e+04s ago] (20, 0)
+2025-12-02 14:00:46 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [cached since 1.548e+04s ago] ()
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news 
+WHERE news.location IS NOT NULL
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [generated in 0.00062s] ()
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.location IS NOT NULL ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [generated in 0.00296s] (50,)
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.location IS NOT NULL
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [generated in 0.00158s] ()
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [cached since 1.548e+04s ago] ()
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news 
+WHERE news.location IS NOT NULL
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [cached since 0.3573s ago] ()
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.location IS NOT NULL ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [cached since 0.2373s ago] (50,)
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.location IS NOT NULL
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - [cached since 0.1651s ago] ()
+2025-12-02 14:00:56 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - [cached since 1.549e+04s ago] ()
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - [cached since 1.549e+04s ago] (20, 0)
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - [cached since 1.549e+04s ago] ()
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - [cached since 1.549e+04s ago] (20, 0)
+2025-12-02 14:01:05 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.keywords IS NOT NULL AND news.publish_date >= $1::TIMESTAMP WITH TIME ZONE AND news.publish_date <= $2::TIMESTAMP WITH TIME ZONE ORDER BY news.publish_date DESC 
+ LIMIT $3::INTEGER
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - [generated in 0.00153s] (datetime.datetime(2025, 11, 25, 14, 1, 10, 227858), datetime.datetime(2025, 12, 2, 14, 1, 10, 227858), 500)
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.keywords IS NOT NULL AND news.publish_date >= $1::TIMESTAMP WITH TIME ZONE 
+ LIMIT $2::INTEGER
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - [generated in 0.00135s] (datetime.datetime(2025, 11, 25, 14, 1, 10, 280041), 200)
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:10 - smartinsight - INFO - 查询到 500 条带关键词的新闻
+2025-12-02 14:01:10 - smartinsight - INFO - 生成 9 个事件聚类
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.keywords IS NOT NULL AND news.publish_date >= $1::TIMESTAMP WITH TIME ZONE AND news.publish_date <= $2::TIMESTAMP WITH TIME ZONE ORDER BY news.publish_date DESC 
+ LIMIT $3::INTEGER
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - [cached since 0.5679s ago] (datetime.datetime(2025, 11, 25, 14, 1, 10, 775069), datetime.datetime(2025, 12, 2, 14, 1, 10, 775069), 500)
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.keywords IS NOT NULL AND news.publish_date >= $1::TIMESTAMP WITH TIME ZONE 
+ LIMIT $2::INTEGER
+2025-12-02 14:01:10 - sqlalchemy.engine.Engine - INFO - [cached since 0.5727s ago] (datetime.datetime(2025, 11, 25, 14, 1, 10, 765480), 200)
+2025-12-02 14:01:11 - smartinsight - INFO - 查询到 500 条带关键词的新闻
+2025-12-02 14:01:11 - smartinsight - INFO - 生成 9 个事件聚类
+2025-12-02 14:01:11 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:11 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - [cached since 1.55e+04s ago] ()
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - [cached since 1.55e+04s ago] (20, 0)
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - [cached since 1.55e+04s ago] ()
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - [cached since 1.55e+04s ago] (20, 0)
+2025-12-02 14:01:15 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:03:44 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:03:44 - sqlalchemy.engine.Engine - INFO - SELECT count(news.id) AS count_1 
+FROM news
+2025-12-02 14:03:44 - sqlalchemy.engine.Engine - INFO - [cached since 1.565e+04s ago] ()
+2025-12-02 14:03:44 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news ORDER BY news.publish_date DESC 
+ LIMIT $1::INTEGER OFFSET $2::INTEGER
+2025-12-02 14:03:44 - sqlalchemy.engine.Engine - INFO - [cached since 1.565e+04s ago] (10, 0)
+2025-12-02 14:03:44 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 14:03:57 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-12-02 14:03:57 - sqlalchemy.engine.Engine - INFO - SELECT news.id, news.title, news.content, news.summary, news.source, news.url, news.publish_date, news.created_at, news.sentiment_score, news.keywords, news.category, news.location 
+FROM news 
+WHERE news.keywords IS NOT NULL AND news.publish_date >= $1::TIMESTAMP WITH TIME ZONE 
+ LIMIT $2::INTEGER
+2025-12-02 14:03:57 - sqlalchemy.engine.Engine - INFO - [cached since 167.2s ago] (datetime.datetime(2025, 11, 29, 14, 3, 57, 563833), 200)
+2025-12-02 14:03:57 - sqlalchemy.engine.Engine - INFO - ROLLBACK
+2025-12-02 15:07:39 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:07:54 - smartinsight - INFO - Sentiment analysis completed: 75
+2025-12-02 15:08:06 - smartinsight - INFO - Sentiment analysis completed: 75
+2025-12-02 15:08:06 - smartinsight - INFO - Sentiment analysis completed: -65
+2025-12-02 15:08:06 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:06 - smartinsight - ERROR - Error in keyword extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 99, in extract_keywords
+    match = re.search(r'\[.*?\]', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:06 - smartinsight - INFO - Calling LLM Provider: baichuan | Model: Baichuan2-Turbo
+2025-12-02 15:08:08 - smartinsight - INFO - LLM response received from baichuan: 14 characters
+2025-12-02 15:08:08 - smartinsight - INFO - Extracted 0 keywords
+2025-12-02 15:08:08 - smartinsight - ERROR - Error in location extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 204, in extract_location
+    match = re.search(r'\{.*?\}', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:08 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:08 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:41 - smartinsight - INFO - Sentiment analysis completed: 75
+2025-12-02 15:09:41 - smartinsight - INFO - Sentiment analysis completed: -65
+2025-12-02 15:09:41 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:41 - smartinsight - ERROR - Error in keyword extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 99, in extract_keywords
+    match = re.search(r'\[.*?\]', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:41 - smartinsight - INFO - Calling LLM Provider: zhipu | Model: glm-4
+2025-12-02 15:09:45 - smartinsight - INFO - LLM response received from zhipu: 159 characters
+2025-12-02 15:09:45 - smartinsight - INFO - Extracted 5 keywords
+2025-12-02 15:09:45 - smartinsight - ERROR - Error in location extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 204, in extract_location
+    match = re.search(r'\{.*?\}', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:45 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:45 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:46 - smartinsight - INFO - LLM 配置已更新: provider=deepseek, model=deepseek-chat
+2025-12-02 15:09:46 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:46 - smartinsight - INFO - LLM response received from deepseek: 7 characters
+2025-12-02 15:09:46 - smartinsight - INFO - Calling LLM Provider: moonshot | Model: moonshot-v1-8k
+2025-12-02 15:09:47 - smartinsight - INFO - LLM response received from moonshot: 50 characters
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:47 - smartinsight - ERROR - Error from deepseek: 401 - <Mock name='mock.text' id='140550806526368'>
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:47 - smartinsight - ERROR - Timeout calling LLM API deepseek at https://api.deepseek.com
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:47 - smartinsight - ERROR - Unexpected response format from deepseek: {'invalid': 'format'}
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: custom-model
+2025-12-02 15:09:47 - smartinsight - INFO - LLM response received from deepseek: 7 characters
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:47 - smartinsight - INFO - LLM response received from deepseek: 5 characters
+2025-12-02 15:09:47 - smartinsight - WARNING - 厂商 invalid_provider 不存在，使用默认厂商 deepseek
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:47 - smartinsight - INFO - LLM response received from deepseek: 6 characters
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:47 - smartinsight - INFO - LLM response received from deepseek: 5 characters
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: qwen | Model: qwen-turbo
+2025-12-02 15:09:47 - smartinsight - INFO - LLM response received from qwen: 5 characters
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: zhipu | Model: glm-4
+2025-12-02 15:09:47 - smartinsight - INFO - LLM response received from zhipu: 5 characters
+2025-12-02 15:09:47 - smartinsight - INFO - Calling LLM Provider: deepseek | Model: deepseek-chat
+2025-12-02 15:09:49 - smartinsight - INFO - LLM response received from deepseek: 15 characters

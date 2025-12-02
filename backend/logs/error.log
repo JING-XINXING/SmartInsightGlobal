@@ -17284,3 +17284,83 @@ Traceback (most recent call last):
     obj, end = self.scan_once(s, idx)
                ^^^^^^^^^^^^^^^^^^^^^^
 json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 7 column 1 (char 101)
+2025-12-02 15:07:39 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:06 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:06 - smartinsight - ERROR - Error in keyword extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 99, in extract_keywords
+    match = re.search(r'\[.*?\]', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:08 - smartinsight - ERROR - Error in location extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 204, in extract_location
+    match = re.search(r'\{.*?\}', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:08 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:08:08 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:41 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:41 - smartinsight - ERROR - Error in keyword extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 99, in extract_keywords
+    match = re.search(r'\[.*?\]', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:45 - smartinsight - ERROR - Error in location extraction: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 204, in extract_location
+    match = re.search(r'\{.*?\}', response, re.DOTALL)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:45 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:45 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+2025-12-02 15:09:47 - smartinsight - ERROR - Error from deepseek: 401 - <Mock name='mock.text' id='140550806526368'>
+2025-12-02 15:09:47 - smartinsight - ERROR - Timeout calling LLM API deepseek at https://api.deepseek.com
+2025-12-02 15:09:47 - smartinsight - ERROR - Unexpected response format from deepseek: {'invalid': 'format'}

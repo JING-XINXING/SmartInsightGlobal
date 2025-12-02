@@ -1,11 +1,15 @@
 from typing import Any, List, Optional
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func, text, or_
 from pydantic import BaseModel
+
 from app import schemas, models
 from app.db import session
+from app.core.cache_service import NewsCacheService, cache_result
 
 router = APIRouter()
 
@@ -48,7 +52,7 @@ async def read_news_paginated(
 ) -> Any:
     """
     获取新闻列表（分页模式）
-    
+
     返回分页数据，包含：
     - items: 当前页的新闻列表
     - total: 总新闻数
@@ -59,24 +63,24 @@ async def read_news_paginated(
     # 构建查询条件
     query = select(models.news.News)
     count_query = select(func.count(models.news.News.id))
-    
+
     # 添加筛选条件
     if source:
         query = query.where(models.news.News.source == source)
         count_query = count_query.where(models.news.News.source == source)
-    
+
     if category:
         query = query.where(models.news.News.category == category)
         count_query = count_query.where(models.news.News.category == category)
-    
+
     # 获取总数
     total_result = await db.execute(count_query)
     total = total_result.scalar() or 0
-    
+
     # 计算分页
     total_pages = (total + page_size - 1) // page_size if total > 0 else 1
     skip = (page - 1) * page_size
-    
+
     # 获取当前页数据
     result = await db.execute(
         query
@@ -85,7 +89,67 @@ async def read_news_paginated(
         .limit(page_size)
     )
     news = result.scalars().all()
-    
+
+    return PaginatedNewsResponse(
+        items=news,
+        total=total,
+        page=page,
+        page_size=page_size,
+        total_pages=total_pages
+    )
+
+
+@router.get("/paginated/cached", response_model=PaginatedNewsResponse)
+@cache_result(
+    key_func=lambda page, page_size, source, category: NewsCacheService.make_news_list_key(page, page_size, source, category),
+    ttl=300,  # 5分钟
+    cache_group="news_list"
+)
+async def read_news_paginated_cached(
+    db: AsyncSession = Depends(session.get_db),
+    page: int = Query(1, ge=1, description="页码，从1开始"),
+    page_size: int = Query(20, ge=10, le=100, description="每页数量，10-100"),
+    source: Optional[str] = Query(None, description="按来源筛选"),
+    category: Optional[str] = Query(None, description="按分类筛选"),
+) -> Any:
+    """
+    获取新闻列表（分页模式，带缓存）
+
+    性能优化特性：
+    - Redis缓存结果
+    - 数据库查询优化
+    - 智能缓存失效
+    """
+    # 构建查询条件
+    query = select(models.news.News)
+    count_query = select(func.count(models.news.News.id))
+
+    # 添加筛选条件
+    if source:
+        query = query.where(models.news.News.source == source)
+        count_query = count_query.where(models.news.News.source == source)
+
+    if category:
+        query = query.where(models.news.News.category == category)
+        count_query = count_query.where(models.news.News.category == category)
+
+    # 获取总数
+    total_result = await db.execute(count_query)
+    total = total_result.scalar() or 0
+
+    # 计算分页
+    total_pages = (total + page_size - 1) // page_size if total > 0 else 1
+    skip = (page - 1) * page_size
+
+    # 获取当前页数据
+    result = await db.execute(
+        query
+        .order_by(models.news.News.publish_date.desc())
+        .offset(skip)
+        .limit(page_size)
+    )
+    news = result.scalars().all()
+
     return PaginatedNewsResponse(
         items=news,
         total=total,
@@ -192,4 +256,25 @@ async def create_news(
     db.add(news)
     await db.commit()
     await db.refresh(news)
+
+    # 创建新闻后失效缓存
+    await NewsCacheService.invalidate_news_cache()
+
     return news
+
+
+@router.post("/invalidate/cache")
+async def invalidate_cache():
+    """手动失效新闻缓存"""
+    success = await NewsCacheService.invalidate_news_cache()
+    return {
+        "message": "新闻缓存失效完成" if success else "缓存失效失败",
+        "success": success,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+@router.get("/cache/stats")
+async def get_cache_stats():
+    """获取缓存统计信息"""
+    return await NewsCacheService.get_cache_stats()

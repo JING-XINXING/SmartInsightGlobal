@@ -5,7 +5,8 @@ SmartInsight Global Backend Tests
 
 import asyncio
 import pytest
-import asyncio_test_utils
+import pytest_asyncio
+
 from typing import AsyncGenerator, Any
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.pool import NullPool
@@ -17,6 +18,7 @@ from app.models.news import News, Source
 from app.db.base_class import Base
 
 # 测试数据库配置
+# 注意: 需要PostgreSQL在端口5433运行，或使用 -k 参数跳过数据库测试
 TEST_DATABASE_URL = "postgresql+asyncpg://test:test@localhost:5433/test_smartinsight"
 
 # 创建测试数据库引擎
@@ -38,7 +40,7 @@ def event_loop():
     yield loop
     loop.close()
 
-@pytest.fixture(scope="function")
+@pytest_asyncio.fixture(scope="function")
 async def db_session() -> AsyncGenerator[AsyncSession, Any]:
     """创建测试数据库会话"""
     async with test_engine.begin() as conn:
@@ -50,7 +52,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, Any]:
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
 
-@pytest.fixture(scope="function")
+@pytest_asyncio.fixture(scope="function")
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, Any]:
     """创建测试客户端"""
     app.dependency_overrides[get_db] = lambda: db_session
@@ -60,7 +62,7 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, Any]:
 
     app.dependency_overrides.clear()
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def sample_news(db_session: AsyncSession):
     """创建示例新闻数据"""
     news_data = [
@@ -107,7 +109,7 @@ async def sample_news(db_session: AsyncSession):
     )
     return result.scalars().all()
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def sample_source(db_session: AsyncSession):
     """创建示例新闻源数据"""
     source = Source(
