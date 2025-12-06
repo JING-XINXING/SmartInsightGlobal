@@ -1,0 +1,20 @@
+{
+  "politics": "政治",
+  "economy": "经济",
+  "military": "军事",
+  "technology": "科技",
+  "society": "社会",
+  "culture": "文化",
+  "sports": "体育",
+  "health": "健康",
+  "environment": "环境",
+  "disaster": "灾难",
+  "international": "国际关系",
+  "education": "教育",
+  "entertainment": "娱乐",
+  "law": "法律",
+  "transportation": "交通",
+  "energy": "能源",
+  "agriculture": "农业",
+  "other": "其他"
+}

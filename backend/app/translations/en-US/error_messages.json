@@ -1,0 +1,42 @@
+{
+  "validation": {
+    "required": "This field is required",
+    "invalid_email": "Invalid email format",
+    "invalid_password": "Invalid password format",
+    "password_too_short": "Password must be at least 8 characters",
+    "password_mismatch": "Passwords do not match",
+    "invalid_phone": "Invalid phone number format"
+  },
+  "auth": {
+    "login_failed": "Login failed, please check your email and password",
+    "account_disabled": "Account has been disabled",
+    "account_not_verified": "Account has not been verified",
+    "invalid_credentials": "Invalid email or password",
+    "token_invalid": "Invalid access token",
+    "session_expired": "Session has expired, please login again",
+    "insufficient_permissions": "Insufficient permissions"
+  },
+  "news": {
+    "not_found": "News article not found",
+    "analysis_failed": "News analysis failed",
+    "fetch_failed": "Failed to fetch news",
+    "invalid_category": "Invalid news category"
+  },
+  "map": {
+    "location_not_found": "Location information not found",
+    "heatmap_generation_failed": "Heatmap generation failed",
+    "invalid_coordinates": "Invalid coordinate format"
+  },
+  "analysis": {
+    "sentiment_analysis_failed": "Sentiment analysis failed",
+    "entity_extraction_failed": "Entity extraction failed",
+    "prediction_failed": "Trend prediction failed",
+    "insufficient_data": "Insufficient data for analysis"
+  },
+  "server": {
+    "database_error": "Database error",
+    "external_api_error": "External API error",
+    "rate_limit_exceeded": "Rate limit exceeded",
+    "service_unavailable": "Service temporarily unavailable"
+  }
+}

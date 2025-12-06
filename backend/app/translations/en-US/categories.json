@@ -1,0 +1,20 @@
+{
+  "politics": "Politics",
+  "economy": "Economy",
+  "military": "Military",
+  "technology": "Technology",
+  "society": "Society",
+  "culture": "Culture",
+  "sports": "Sports",
+  "health": "Health",
+  "environment": "Environment",
+  "disaster": "Disaster",
+  "international": "International Relations",
+  "education": "Education",
+  "entertainment": "Entertainment",
+  "law": "Law",
+  "transportation": "Transportation",
+  "energy": "Energy",
+  "agriculture": "Agriculture",
+  "other": "Other"
+}

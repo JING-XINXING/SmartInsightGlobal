@@ -17364,3 +17364,15 @@ TypeError: expected string or bytes-like object
 2025-12-02 15:09:47 - smartinsight - ERROR - Error from deepseek: 401 - <Mock name='mock.text' id='140550806526368'>
 2025-12-02 15:09:47 - smartinsight - ERROR - Timeout calling LLM API deepseek at https://api.deepseek.com
 2025-12-02 15:09:47 - smartinsight - ERROR - Unexpected response format from deepseek: {'invalid': 'format'}
+2025-12-06 16:53:40 - smartinsight - ERROR - Registration failed: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedTableError'>: relation "users" does not exist
+[SQL: SELECT users.id, users.email, users.username, users.password_hash, users.first_name, users.last_name, users.full_name, users.avatar_url, users.bio, users.timezone, users.language, users.is_active, users.is_verified, users.is_admin, users.role, users.permissions, users.groups, users.status, users.last_login, users.created_at, users.updated_at, users.reset_token, users.reset_token_expires, users.email_verification_token, users.email_verification_expires, users.api_key, users.api_key_expires, users.preferences, users.notification_settings 
+FROM users 
+WHERE users.email = $1::VARCHAR]
+[parameters: ('demo@smartinsightglobal.com',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-12-06 16:57:45 - smartinsight - ERROR - Registration failed: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-06 16:58:18 - smartinsight - ERROR - Registration failed: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-06 16:58:36 - smartinsight - ERROR - Registration failed: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-06 16:59:21 - smartinsight - ERROR - Registration failed: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-06 17:00:48 - smartinsight - ERROR - Registration failed: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-06 18:35:40 - smartinsight - ERROR - Sentiment trend prediction failed: Expecting ',' delimiter: line 8 column 4 (char 300)

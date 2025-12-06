@@ -10,4 +10,10 @@ feedparser
 httpx
 beautifulsoup4
 python-multipart
-alembic @ file:///home/conda/feedstock_root/build_artifacts/alembic_1760257481429/work
+alembic
+PyJWT
+passlib[bcrypt]
+python-jose[cryptography]
+email-validator
+jinja2
+reportlab

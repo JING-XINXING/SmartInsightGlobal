@@ -1,0 +1,14 @@
+{
+  "success": "Operation successful",
+  "created": "Resource created successfully",
+  "updated": "Resource updated successfully",
+  "deleted": "Resource deleted successfully",
+  "not_found": "Resource not found",
+  "invalid_request": "Invalid request parameters",
+  "permission_denied": "Permission denied",
+  "server_error": "Internal server error",
+  "unauthorized": "Unauthorized access",
+  "token_expired": "Access token has expired",
+  "invalid_token": "Invalid access token",
+  "validation_failed": "Data validation failed"
+}

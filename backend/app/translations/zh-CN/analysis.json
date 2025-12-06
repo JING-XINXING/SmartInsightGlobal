@@ -1,0 +1,44 @@
+{
+  "sentiment": {
+    "very_positive": "非常积极",
+    "positive": "积极",
+    "neutral": "中性",
+    "negative": "消极",
+    "very_negative": "非常消极"
+  },
+  "emotion": {
+    "joy": "喜悦",
+    "sadness": "悲伤",
+    "anger": "愤怒",
+    "fear": "恐惧",
+    "surprise": "惊讶",
+    "disgust": "厌恶",
+    "neutral": "中性"
+  },
+  "entity_type": {
+    "person": "人物",
+    "organization": "组织",
+    "location": "地点",
+    "event": "事件",
+    "product": "产品",
+    "date": "日期",
+    "money": "金额",
+    "percent": "百分比",
+    "other": "其他"
+  },
+  "trend": {
+    "improving": "上升",
+    "declining": "下降",
+    "stable": "稳定"
+  },
+  "prediction_horizon": {
+    "short_term": "短期",
+    "medium_term": "中期",
+    "long_term": "长期"
+  },
+  "confidence_level": {
+    "high": "高",
+    "medium": "中",
+    "low": "低"
+  }
+}

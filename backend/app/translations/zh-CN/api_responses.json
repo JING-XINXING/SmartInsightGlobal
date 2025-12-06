@@ -1,0 +1,14 @@
+{
+  "success": "操作成功",
+  "created": "创建成功",
+  "updated": "更新成功",
+  "deleted": "删除成功",
+  "not_found": "未找到记录",
+  "invalid_request": "请求参数无效",
+  "permission_denied": "权限不足",
+  "server_error": "服务器内部错误",
+  "unauthorized": "未授权访问",
+  "token_expired": "访问令牌已过期",
+  "invalid_token": "无效的访问令牌",
+  "validation_failed": "数据验证失败"
+}

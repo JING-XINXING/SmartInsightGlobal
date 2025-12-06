@@ -1,0 +1,38 @@
+{
+  "heatmap": {
+    "title": "Global News Heatmap",
+    "intensity_levels": {
+      "low": "Low Intensity",
+      "medium": "Medium Intensity",
+      "high": "High Intensity"
+    },
+    "time_ranges": {
+      "hour": "Last Hour",
+      "day": "Last 24 Hours",
+      "week": "Last Week",
+      "month": "Last Month"
+    },
+    "grid_types": {
+      "global": "Global Grid",
+      "regional": "Regional Grid",
+      "city": "City Grid"
+    }
+  },
+  "hotspots": {
+    "title": "Hotspot Regions",
+    "current_hotspots": "Current Hotspots",
+    "trending_regions": "Trending Regions",
+    "breaking_news": "Breaking News"
+  },
+  "regions": {
+    "sentiment_distribution": "Regional Sentiment Distribution",
+    "most_positive": "Most Positive Region",
+    "most_negative": "Most Negative Region",
+    "neutral": "Neutral Regions"
+  },
+  "clustering": {
+    "event_clusters": "Event Clusters",
+    "related_events": "Related Events",
+    "correlation_strength": "Correlation Strength"
+  }
+}

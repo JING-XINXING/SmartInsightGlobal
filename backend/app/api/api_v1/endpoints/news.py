@@ -178,45 +178,53 @@ async def search_news(
     category: Optional[str] = Query(None, description="按分类筛选"),
 ) -> Any:
     """
-    全文搜索新闻
-    
-    使用 PostgreSQL 全文搜索功能，支持:
-    - 标题匹配 (权重最高)
-    - 摘要匹配 (权重中等)
-    - 内容匹配 (权重较低)
-    
-    结果按相关性排序
+    简单搜索新闻
+
+    使用 SQL LIKE 查询，支持:
+    - 标题匹配
+    - 摘要匹配
+    - 内容匹配
+
+    结果按发布时间排序
     """
-    # 构建搜索查询
-    search_query = func.plainto_tsquery('english', q)
-    
-    # 基础查询 - 使用全文搜索
+    # 基础查询 - 使用简单的LIKE搜索
+    base_conditions = [
+        models.news.News.title.ilike(f"%{q}%")
+    ]
+
+    # 添加摘要和内容搜索条件
+    search_conditions = base_conditions + [
+        models.news.News.summary.ilike(f"%{q}%"),
+        models.news.News.content.ilike(f"%{q}%")
+    ]
+
+    # 构建基础查询
     base_query = select(models.news.News).where(
-        text("search_vector @@ plainto_tsquery('english', :query)")
-    ).params(query=q)
-    
+        or_(*search_conditions)
+    )
+
     # 添加筛选条件
     if source:
         base_query = base_query.where(models.news.News.source == source)
     if category:
         base_query = base_query.where(models.news.News.category == category)
-    
+
     # 获取总数
     count_query = select(func.count()).select_from(
         base_query.subquery()
     )
     total_result = await db.execute(count_query)
     total = total_result.scalar() or 0
-    
-    # 按相关性排序并分页
+
+    # 按发布时间排序并分页
     skip = (page - 1) * page_size
     result_query = base_query.order_by(
-        text("ts_rank(search_vector, plainto_tsquery('english', :query)) DESC")
-    ).params(query=q).offset(skip).limit(page_size)
-    
+        models.news.News.publish_date.desc()
+    ).offset(skip).limit(page_size)
+
     result = await db.execute(result_query)
     news_list = result.scalars().all()
-    
+
     return SearchResponse(
         items=news_list,
         total=total,

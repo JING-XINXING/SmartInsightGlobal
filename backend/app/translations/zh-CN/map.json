@@ -1,0 +1,38 @@
+{
+  "heatmap": {
+    "title": "全球新闻热点图",
+    "intensity_levels": {
+      "low": "低强度",
+      "medium": "中等强度",
+      "high": "高强度"
+    },
+    "time_ranges": {
+      "hour": "最近1小时",
+      "day": "最近24小时",
+      "week": "最近一周",
+      "month": "最近一月"
+    },
+    "grid_types": {
+      "global": "全球网格",
+      "regional": "区域网格",
+      "city": "城市网格"
+    }
+  },
+  "hotspots": {
+    "title": "热点区域",
+    "current_hotspots": "当前热点",
+    "trending_regions": "趋势区域",
+    "breaking_news": "突发新闻"
+  },
+  "regions": {
+    "sentiment_distribution": "地区情感分布",
+    "most_positive": "最积极地区",
+    "most_negative": "最消极地区",
+    "neutral": "中性地区"
+  },
+  "clustering": {
+    "event_clusters": "事件聚类",
+    "related_events": "相关事件",
+    "correlation_strength": "关联强度"
+  }
+}

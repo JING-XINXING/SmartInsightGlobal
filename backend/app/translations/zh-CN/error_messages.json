@@ -1,0 +1,42 @@
+{
+  "validation": {
+    "required": "此字段为必填项",
+    "invalid_email": "邮箱格式无效",
+    "invalid_password": "密码格式无效",
+    "password_too_short": "密码长度至少8位",
+    "password_mismatch": "两次输入的密码不一致",
+    "invalid_phone": "手机号格式无效"
+  },
+  "auth": {
+    "login_failed": "登录失败，请检查邮箱和密码",
+    "account_disabled": "账户已被禁用",
+    "account_not_verified": "账户未验证",
+    "invalid_credentials": "邮箱或密码错误",
+    "token_invalid": "访问令牌无效",
+    "session_expired": "会话已过期，请重新登录",
+    "insufficient_permissions": "权限不足"
+  },
+  "news": {
+    "not_found": "新闻不存在",
+    "analysis_failed": "新闻分析失败",
+    "fetch_failed": "获取新闻失败",
+    "invalid_category": "无效的新闻分类"
+  },
+  "map": {
+    "location_not_found": "未找到位置信息",
+    "heatmap_generation_failed": "热力图生成失败",
+    "invalid_coordinates": "坐标格式无效"
+  },
+  "analysis": {
+    "sentiment_analysis_failed": "情感分析失败",
+    "entity_extraction_failed": "实体提取失败",
+    "prediction_failed": "趋势预测失败",
+    "insufficient_data": "数据不足，无法进行分析"
+  },
+  "server": {
+    "database_error": "数据库错误",
+    "external_api_error": "外部API错误",
+    "rate_limit_exceeded": "请求频率超限",
+    "service_unavailable": "服务暂时不可用"
+  }
+}

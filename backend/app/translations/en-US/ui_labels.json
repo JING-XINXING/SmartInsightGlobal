@@ -1,0 +1,63 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "no_data": "No data available",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "close": "Close",
+    "download": "Download",
+    "upload": "Upload",
+    "copy": "Copy",
+    "export": "Export",
+    "import": "Import"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "news": "News",
+    "analysis": "Analysis",
+    "map": "Map",
+    "events": "Events",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "time": {
+    "now": "Now",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "this_week": "This Week",
+    "this_month": "This Month",
+    "last_week": "Last Week",
+    "last_month": "Last Month",
+    "ago": "{0} ago",
+    "in": "in {0}"
+  },
+  "language": {
+    "zh-CN": "中文",
+    "native.zh-CN": "中文",
+    "en-US": "English",
+    "native.en-US": "English"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "suspended": "Suspended",
+    "pending": "Pending",
+    "completed": "Completed",
+    "failed": "Failed",
+    "processing": "Processing"
+  }
+}

@@ -3,14 +3,16 @@
 提供新闻地理位置数据，用于全球热点地图可视化
 """
 from typing import Any, List, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func, and_
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app import models
 from app.db import session
 from app.core.logger import logger
+from app.core.geo_heatmap import advanced_geo_heatmap_analyzer, TimeRange
+from app.models.user import User
 
 router = APIRouter()
 
@@ -47,6 +49,20 @@ class MapDataResponse(BaseModel):
     clusters: List[LocationCluster]
     total_with_location: int
     total_news: int
+
+
+class HeatmapRequest(BaseModel):
+    """热力图请求模型"""
+    bbox: Optional[List[float]] = Field(None, description="边界框 [min_lat, min_lng, max_lat, max_lng]")
+    time_range: str = Field("day", regex="^(hour|day|week|month)$", description="时间范围")
+    grid_type: str = Field("global", regex="^(global|regional|city)$", description="网格类型")
+    sentiment_filter: Optional[List[int]] = Field(None, description="情感分数范围 [min, max]")
+
+
+class GeographicAnalysisRequest(BaseModel):
+    """地理分析请求模型"""
+    region: Optional[str] = Field(None, description="特定地区筛选")
+    time_range: str = Field("week", regex="^(hour|day|week|month)$", description="时间范围")
 
 
 @router.get("/news-locations", response_model=List[NewsLocation])
@@ -269,4 +285,297 @@ async def get_map_stats(
         total_with_location=total_with_location,
         total_news=total_news
     )
+
+
+@router.post("/heatmap/advanced")
+async def generate_advanced_heatmap(
+    request: HeatmapRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(session.get_db)
+):
+    """
+    生成高级实时热力图
+
+    需要权限: read_news
+    """
+    require_permission(current_user, "read_news")
+
+    try:
+        # 转换参数
+        bbox = tuple(request.bbox) if request.bbox else None
+        time_range = TimeRange(request.time_range)
+        sentiment_filter = tuple(request.sentiment_filter) if request.sentiment_filter else None
+
+        # 生成热力图
+        heatmap_data = await advanced_geo_heatmap_analyzer.generate_realtime_heatmap(
+            db=db,
+            bbox=bbox,
+            time_range=time_range,
+            grid_type=request.grid_type,
+            sentiment_filter=sentiment_filter
+        )
+
+        logger.info(f"Generated advanced heatmap for user {current_user.id}")
+        return heatmap_data
+
+    except Exception as e:
+        logger.error(f"Failed to generate advanced heatmap: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate heatmap: {str(e)}")
+
+
+@router.get("/heatmap/realtime")
+async def get_realtime_heatmap(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(session.get_db),
+    bbox: Optional[str] = Query(None, description="边界框，格式：min_lat,min_lng,max_lat,max_lng"),
+    time_range: str = Query("day", regex="^(hour|day|week|month)$", description="时间范围"),
+    grid_type: str = Query("global", regex="^(global|regional|city)$", description="网格类型")
+):
+    """
+    获取实时热力图（GET方式）
+
+    需要权限: read_news
+    """
+    require_permission(current_user, "read_news")
+
+    try:
+        # 解析边界框
+        bbox = None
+        if bbox:
+            try:
+                bbox_parts = [float(x) for x in bbox.split(',')]
+                if len(bbox_parts) == 4:
+                    bbox = tuple(bbox_parts)
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid bbox format")
+
+        time_range_enum = TimeRange(time_range)
+
+        # 生成热力图
+        heatmap_data = await advanced_geo_heatmap_analyzer.generate_realtime_heatmap(
+            db=db,
+            bbox=bbox,
+            time_range=time_range_enum,
+            grid_type=grid_type
+        )
+
+        logger.info(f"Generated realtime heatmap for user {current_user.id}")
+        return heatmap_data
+
+    except Exception as e:
+        logger.error(f"Failed to generate realtime heatmap: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate heatmap: {str(e)}")
+
+
+@router.post("/analysis/geographic")
+async def analyze_geographic_patterns(
+    request: GeographicAnalysisRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(session.get_db)
+):
+    """
+    分析地理模式
+
+    需要权限: read_news
+    """
+    require_permission(current_user, "read_news")
+
+    try:
+        time_range = TimeRange(request.time_range)
+
+        # 执行地理模式分析
+        patterns_data = await advanced_geo_heatmap_analyzer.analyze_geographic_patterns(
+            db=db,
+            region=request.region,
+            time_range=time_range
+        )
+
+        logger.info(f"Analyzed geographic patterns for region '{request.region}'")
+        return patterns_data
+
+    except Exception as e:
+        logger.error(f"Failed to analyze geographic patterns: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to analyze patterns: {str(e)}")
+
+
+@router.get("/hotspots")
+async def get_current_hotspots(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(session.get_db),
+    limit: int = Query(20, ge=5, le=100, description="热点数量限制"),
+    min_intensity: float = Query(0.1, ge=0.0, le=1.0, description="最小强度阈值"),
+    time_range: str = Query("day", regex="^(hour|day|week|month)$", description="时间范围")
+):
+    """
+    获取当前热点区域
+
+    需要权限: read_news
+    """
+    require_permission(current_user, "read_news")
+
+    try:
+        time_range_enum = TimeRange(time_range)
+
+        # 生成热力图以获取热点
+        heatmap_data = await advanced_geo_heatmap_analyzer.generate_realtime_heatmap(
+            db=db,
+            time_range=time_range_enum,
+            grid_type="regional"
+        )
+
+        # 过滤热点
+        hotspots = [
+            spot for spot in heatmap_data.get("hotspots", [])
+            if spot.get("intensity", 0) >= min_intensity
+        ][:limit]
+
+        return {
+            "hotspots": hotspots,
+            "metadata": heatmap_data.get("metadata", {}),
+            "total_found": len(hotspots)
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to get hotspots: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get hotspots: {str(e)}")
+
+
+@router.get("/regions/sentiment")
+async def get_regional_sentiment(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(session.get_db),
+    time_range: str = Query("week", regex="^(hour|day|week|month)$", description="时间范围")
+):
+    """
+    获取各地区情感分布
+
+    需要权限: read_news
+    """
+    require_permission(current_user, "read_news")
+
+    try:
+        time_range_enum = TimeRange(time_range)
+
+        # 分析地理模式以获取情感数据
+        patterns_data = await advanced_geo_heatmap_analyzer.analyze_geographic_patterns(
+            db=db,
+            time_range=time_range_enum
+        )
+
+        sentiment_patterns = patterns_data.get("patterns", {}).get("sentiment_patterns", {})
+
+        # 格式化响应
+        regional_sentiments = []
+        for region, avg_sentiment in sentiment_patterns.get("regional_sentiments", {}).items():
+            regional_sentiments.append({
+                "region": region,
+                "avg_sentiment": round(avg_sentiment, 2),
+                "sentiment_label": "positive" if avg_sentiment > 10 else "negative" if avg_sentiment < -10 else "neutral"
+            })
+
+        # 按情感分数排序
+        regional_sentiments.sort(key=lambda x: x["avg_sentiment"], reverse=True)
+
+        return {
+            "regional_sentiments": regional_sentiments,
+            "most_positive": sentiment_patterns.get("most_positive_region"),
+            "most_negative": sentiment_patterns.get("most_negative_region"),
+            "time_range": time_range,
+            "total_regions": len(regional_sentiments)
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to get regional sentiment: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get regional sentiment: {str(e)}")
+
+
+@router.get("/clustering/events")
+async def get_event_clustering(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(session.get_db),
+    min_cluster_size: int = Query(3, ge=2, le=20, description="最小聚类大小"),
+    time_range: str = Query("day", regex="^(hour|day|week|month)$", description="时间范围")
+):
+    """
+    获取事件聚类分析
+
+    需要权限: read_news
+    """
+    require_permission(current_user, "read_news")
+
+    try:
+        time_range_enum = TimeRange(time_range)
+
+        # 分析地理模式以获取聚类信息
+        patterns_data = await advanced_geo_heatmap_analyzer.analyze_geographic_patterns(
+            db=db,
+            time_range=time_range_enum
+        )
+
+        cluster_patterns = patterns_data.get("patterns", {}).get("geographic_clusters", {})
+        correlation_patterns = patterns_data.get("patterns", {}).get("event_correlations", {})
+
+        # 过滤小型聚类
+        clusters = [
+            cluster for cluster in cluster_patterns.get("clusters", [])
+            if cluster.get("news_count", 0) >= min_cluster_size
+        ]
+
+        return {
+            "clusters": clusters,
+            "cluster_count": len(clusters),
+            "correlations": correlation_patterns.get("top_correlations", []),
+            "correlations_count": correlation_patterns.get("correlations_count", 0),
+            "time_range": time_range,
+            "min_cluster_size": min_cluster_size
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to get event clustering: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get event clustering: {str(e)}")
+
+
+@router.get("/statistics/advanced")
+async def get_advanced_map_statistics(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(session.get_db),
+    time_range: str = Query("week", regex="^(hour|day|week|month)$", description="时间范围")
+):
+    """
+    获取高级地图统计数据
+
+    需要权限: read_news
+    """
+    require_permission(current_user, "read_news")
+
+    try:
+        time_range_enum = TimeRange(time_range)
+
+        # 生成热力图以获取统计数据
+        heatmap_data = await advanced_geo_heatmap_analyzer.generate_realtime_heatmap(
+            db=db,
+            time_range=time_range_enum,
+            grid_type="global"
+        )
+
+        # 分析地理模式
+        patterns_data = await advanced_geo_heatmap_analyzer.analyze_geographic_patterns(
+            db=db,
+            time_range=time_range_enum
+        )
+
+        statistics = heatmap_data.get("statistics", {})
+        temporal_patterns = patterns_data.get("patterns", {}).get("temporal_patterns", {})
+
+        return {
+            "basic_statistics": statistics,
+            "temporal_patterns": temporal_patterns,
+            "heatmap_metadata": heatmap_data.get("metadata", {}),
+            "time_series": heatmap_data.get("time_series", [])[-24:],  # 最近24个数据点
+            "analysis_time_range": time_range
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to get advanced statistics: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get advanced statistics: {str(e)}")
 

@@ -1,0 +1,44 @@
+{
+  "sentiment": {
+    "very_positive": "Very Positive",
+    "positive": "Positive",
+    "neutral": "Neutral",
+    "negative": "Negative",
+    "very_negative": "Very Negative"
+  },
+  "emotion": {
+    "joy": "Joy",
+    "sadness": "Sadness",
+    "anger": "Anger",
+    "fear": "Fear",
+    "surprise": "Surprise",
+    "disgust": "Disgust",
+    "neutral": "Neutral"
+  },
+  "entity_type": {
+    "person": "Person",
+    "organization": "Organization",
+    "location": "Location",
+    "event": "Event",
+    "product": "Product",
+    "date": "Date",
+    "money": "Money",
+    "percent": "Percentage",
+    "other": "Other"
+  },
+  "trend": {
+    "improving": "Improving",
+    "declining": "Declining",
+    "stable": "Stable"
+  },
+  "prediction_horizon": {
+    "short_term": "Short Term",
+    "medium_term": "Medium Term",
+    "long_term": "Long Term"
+  },
+  "confidence_level": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  }
+}
