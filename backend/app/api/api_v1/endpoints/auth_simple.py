@@ -40,6 +40,15 @@ class UserResponse(BaseModel):
     created_at: datetime
 
 
+class TokenWithUser(BaseModel):
+    """令牌和用户信息响应模型"""
+    access_token: str
+    refresh_token: str
+    token_type: str
+    expires_in: int
+    user: UserResponse
+
+
 class Token(BaseModel):
     """令牌响应模型"""
     access_token: str
@@ -119,7 +128,7 @@ async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db
         )
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=TokenWithUser)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db)
@@ -141,13 +150,21 @@ async def login_for_access_token(
         # 创建令牌
         tokens = auth_manager.create_user_tokens(user)
 
-        logger.info(f"User logged in successfully: {user.email}")
+        logger.info(f"User logged in successfully: {user.email} (role: {user.role})")
 
-        return Token(
+        return TokenWithUser(
             access_token=tokens["access_token"],
             refresh_token=tokens["refresh_token"],
             token_type=tokens["token_type"],
-            expires_in=tokens["expires_in"]
+            expires_in=tokens["expires_in"],
+            user=UserResponse(
+                id=user.id,
+                email=user.email,
+                username=user.username,
+                role=user.role,
+                is_active=user.is_active,
+                created_at=user.created_at
+            )
         )
 
     except HTTPException:

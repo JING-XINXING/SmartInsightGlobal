@@ -12,7 +12,7 @@ import enum
 from app.db.base_class import Base
 
 
-class RoleEnum(str, SQLEnum):
+class RoleEnum(str, enum.Enum):
     """用户角色枚举"""
     ADMIN = "admin"  # 管理员 - 所有权限
     ANALYST = "analyst"  # 分析师 - 查看分析，编辑配置
@@ -20,7 +20,7 @@ class RoleEnum(str, SQLEnum):
     GUEST = "guest"  # 访客 - 限制访问
 
 
-class UserStatus(str, SQLEnum):
+class UserStatus(str, enum.Enum):
     """用户状态枚举"""
     ACTIVE = "active"  # 活跃
     INACTIVE = "inactive"  # 非活跃

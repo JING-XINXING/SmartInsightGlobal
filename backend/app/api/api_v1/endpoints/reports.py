@@ -12,7 +12,7 @@ import os
 
 from app.core.report_generator import report_generator, ReportFormat, ReportType, ReportMetadata, ReportSection
 from app.core.i18n import i18n_manager, Language, get_current_language
-from app.api.api_v1.endpoints.auth import get_current_user, require_permission
+from app.api.api_v1.endpoints.auth import get_current_user
 from app.models.user import User
 from app.db.session import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,8 +25,8 @@ router = APIRouter()
 class ReportRequest(BaseModel):
     """报告生成请求模型"""
     title: str = Field(..., description="报告标题")
-    report_type: str = Field(..., regex="^(news_analysis|sentiment_trend|geographic_analysis|comprehensive_report|custom)$")
-    format: str = Field("html", regex="^(pdf|html|markdown)$")
+    report_type: str = Field(..., pattern="^(news_analysis|sentiment_trend|geographic_analysis|comprehensive_report|custom)$")
+    format: str = Field("html", pattern="^(pdf|html|markdown)$")
     language: Optional[str] = Field(None, description="语言代码")
     time_range: Optional[str] = Field(None, description="时间范围")
     filters: Optional[Dict[str, Any]] = Field(None, description="筛选条件")
@@ -37,7 +37,7 @@ class ReportRequest(BaseModel):
 class NewsAnalysisReportRequest(BaseModel):
     """新闻分析报告请求"""
     title: str = Field(..., description="报告标题")
-    format: str = Field("html", regex="^(pdf|html|markdown)$")
+    format: str = Field("html", pattern="^(pdf|html|markdown)$")
     language: Optional[str] = Field(None, description="语言代码")
     time_range: Optional[str] = Field(None, description="时间范围")
     categories: Optional[List[str]] = Field(None, description="新闻类别筛选")
@@ -47,7 +47,7 @@ class NewsAnalysisReportRequest(BaseModel):
 class CustomReportRequest(BaseModel):
     """自定义报告请求"""
     title: str = Field(..., description="报告标题")
-    format: str = Field("html", regex="^(pdf|html|markdown)$")
+    format: str = Field("html", pattern="^(pdf|html|markdown)$")
     language: Optional[str] = Field(None, description="语言代码")
     sections: List[Dict[str, Any]] = Field(..., description="报告章节内容")
 
@@ -64,7 +64,8 @@ async def generate_news_analysis_report(
 
     需要权限: view_reports
     """
-    require_permission(current_user, "view_reports")
+    if not current_user.has_permission("view_reports"):
+        raise HTTPException(status_code=403, detail="Permission denied: view_reports required")
 
     try:
         # 解析语言
@@ -152,10 +153,10 @@ async def generate_news_analysis_report(
 
 @router.post("/generate/sentiment-trend")
 async def generate_sentiment_trend_report(
-    title: str = Field(..., description="报告标题"),
-    format: str = Field("html", regex="^(pdf|html|markdown)$"),
-    language: Optional[str] = Field(None, description="语言代码"),
-    time_range: str = Field("week", regex="^(hour|day|week|month)$"),
+    title: str = Query(..., description="报告标题"),
+    format: str = Query("html", pattern="^(pdf|html|markdown)$"),
+    language: Optional[str] = Query(None, description="语言代码"),
+    time_range: str = Query("week", pattern="^(hour|day|week|month)$"),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -163,7 +164,8 @@ async def generate_sentiment_trend_report(
 
     需要权限: view_reports
     """
-    require_permission(current_user, "view_reports")
+    if not current_user.has_permission("view_reports"):
+        raise HTTPException(status_code=403, detail="Permission denied: view_reports required")
 
     try:
         # 解析参数
@@ -238,7 +240,8 @@ async def generate_custom_report(
 
     需要权限: view_reports
     """
-    require_permission(current_user, "view_reports")
+    if not current_user.has_permission("view_reports"):
+        raise HTTPException(status_code=403, detail="Permission denied: view_reports required")
 
     try:
         # 解析语言
@@ -310,7 +313,8 @@ async def download_report(
 
     需要权限: view_reports
     """
-    require_permission(current_user, "view_reports")
+    if not current_user.has_permission("view_reports"):
+        raise HTTPException(status_code=403, detail="Permission denied: view_reports required")
 
     try:
         # 安全检查文件名
@@ -354,7 +358,8 @@ async def list_reports(
 
     需要权限: view_reports
     """
-    require_permission(current_user, "view_reports")
+    if not current_user.has_permission("view_reports"):
+        raise HTTPException(status_code=403, detail="Permission denied: view_reports required")
 
     try:
         reports = []
@@ -395,7 +400,8 @@ async def delete_report(
 
     需要权限: manage_reports
     """
-    require_permission(current_user, "manage_reports")
+    if not current_user.has_permission("manage_reports"):
+        raise HTTPException(status_code=403, detail="Permission denied: manage_reports required")
 
     try:
         # 安全检查文件名

@@ -26,10 +26,10 @@ async def create_demo_user():
     """创建demo用户"""
 
     demo_user_data = {
-        "username": "demo",
-        "email": "demo@smartinsight.com",
-        "password": "demo123",  # 简单密码，仅用于演示
-        "first_name": "Demo",
+        "username": "admin",
+        "email": "admin@smartinsight.com",
+        "password": "admin123",  # 简单密码，仅用于演示
+        "first_name": "Admin",
         "last_name": "User",
         "role": RoleEnum.ADMIN
     }
@@ -178,8 +178,8 @@ async def main():
         print("✅ Demo用户创建完成！")
         print("\n📋 登录信息:")
         print("主管理员账户:")
-        print("  用户名: demo")
-        print("  密码: demo123")
+        print("  用户名: admin")
+        print("  密码: admin123")
         print("\n其他账户:")
         print("  分析师账户: analyst / analyst123")
         print("  查看者账户: viewer / viewer123")

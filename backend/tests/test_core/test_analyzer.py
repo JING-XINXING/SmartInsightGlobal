@@ -54,13 +54,7 @@ class TestNewsAnalyzer:
     async def test_sentiment_analysis_neutral(self, analyzer):
         """测试中性情感分析"""
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
-            mock_chat.return_value = {
-                "choices": [{
-                    "message": {
-                        "content": '{"sentiment_score": 5}'
-                    }
-                }]
-            }
+            mock_chat.return_value = '{"sentiment_score": 5}'
             
             score = await analyzer.analyze_sentiment(
                 "Government announces new policy",
@@ -74,13 +68,7 @@ class TestNewsAnalyzer:
     async def test_keyword_extraction(self, analyzer):
         """测试关键词提取"""
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
-            mock_chat.return_value = {
-                "choices": [{
-                    "message": {
-                        "content": '{"keywords": ["AI", "technology", "innovation", "breakthrough"]}'
-                    }
-                }]
-            }
+            mock_chat.return_value = '{"keywords": ["AI", "technology", "innovation", "breakthrough"]}'
             
             keywords = await analyzer.extract_keywords(
                 "AI Technology Breakthrough",
@@ -96,21 +84,18 @@ class TestNewsAnalyzer:
     @pytest.mark.unit
     async def test_keyword_extraction_empty_content(self, analyzer):
         """测试空内容的关键词提取"""
-        keywords = await analyzer.extract_keywords("", "")
-        assert keywords == [], "空内容应返回空列表"
+        with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
+            mock_chat.return_value = '[]'
+            keywords = await analyzer.extract_keywords("", "")
+            assert keywords == [], "空内容应返回空列表"
     
     @pytest.mark.asyncio
     @pytest.mark.unit
     async def test_categorize_news(self, analyzer):
+
         """测试新闻分类"""
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
-            mock_chat.return_value = {
-                "choices": [{
-                    "message": {
-                        "content": '{"category": "Technology"}'
-                    }
-                }]
-            }
+            mock_chat.return_value = '{"category": "科技"}'
             
             category = await analyzer.categorize_news(
                 "New AI Model Released",
@@ -118,43 +103,31 @@ class TestNewsAnalyzer:
             )
             
             assert category in [
-                "Politics", "Economy", "Technology", "Military", "Society",
-                "Environment", "Health", "Culture", "Sports", "Disaster",
-                "International Relations", "Other"
+                "政治", "经济", "军事", "科技", "社会", "文化", 
+                "体育", "健康", "环境", "灾难", "国际关系", "其他"
             ], "分类应该在预定义类别中"
+            assert category == "科技"
     
     @pytest.mark.asyncio
     @pytest.mark.unit
     async def test_categorize_news_invalid_response(self, analyzer):
         """测试无效响应的新闻分类"""
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
-            mock_chat.return_value = {
-                "choices": [{
-                    "message": {
-                        "content": '{"category": "InvalidCategory"}'
-                    }
-                }]
-            }
+            mock_chat.return_value = '{"category": "InvalidCategory"}'
             
             category = await analyzer.categorize_news(
                 "Test Article",
                 "Test content..."
             )
             
-            assert category == "Other", "无效分类应降级为'Other'"
+            assert category == "其他", "无效分类应降级为'Other'"
     
     @pytest.mark.asyncio
     @pytest.mark.unit
     async def test_extract_location(self, analyzer):
         """测试地理位置提取"""
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
-            mock_chat.return_value = {
-                "choices": [{
-                    "message": {
-                        "content": '{"country": "United States", "city": "New York"}'
-                    }
-                }]
-            }
+            mock_chat.return_value = '{"country": "United States", "city": "New York"}'
             
             location = await analyzer.extract_location(
                 "New York City News",
@@ -171,13 +144,13 @@ class TestNewsAnalyzer:
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
             # 模拟多次调用返回不同结果
             mock_chat.side_effect = [
-                {"choices": [{"message": {"content": '{"sentiment_score": 60}'}}]},
-                {"choices": [{"message": {"content": '{"keywords": ["economy", "growth", "market"]}'}}]},
-                {"choices": [{"message": {"content": '{"category": "Economy"}'}}]},
-                {"choices": [{"message": {"content": '{"country": "China", "city": "Beijing"}'}}]},
+                '{"sentiment_score": 60}',
+                '{"keywords": ["economy", "growth", "market"]}',
+                '{"category": "经济"}',
+                '{"country": "China", "city": "Beijing"}'
             ]
             
-            result = await analyzer.analyze_news(
+            result = await analyzer.analyze_news_full(
                 title="Economic Growth Accelerates",
                 content="China's economy shows strong growth in major cities like Beijing...",
                 extract_location=True
@@ -189,7 +162,7 @@ class TestNewsAnalyzer:
             assert "location" in result
             assert result["sentiment_score"] > 0
             assert len(result["keywords"]) >= 3
-            assert result["category"] == "Economy"
+            assert result["category"] == "经济"
     
     @pytest.mark.asyncio
     @pytest.mark.unit
@@ -199,16 +172,16 @@ class TestNewsAnalyzer:
             # 模拟 API 错误
             mock_chat.side_effect = Exception("API Error")
             
-            result = await analyzer.analyze_news(
+            result = await analyzer.analyze_news_full(
                 title="Test Article",
                 content="Test content...",
                 extract_location=False
             )
             
             # 应该返回默认值而不是抛出异常
-            assert result["sentiment_score"] == 0
-            assert result["keywords"] == []
-            assert result["category"] == "Other"
+            assert result["sentiment_score"] == None
+            assert result["keywords"] == None
+            assert result["category"] == "其他"
     
     @pytest.mark.asyncio
     @pytest.mark.unit
@@ -220,7 +193,7 @@ class TestNewsAnalyzer:
             {"title": "Article 3", "content": "Content 3"},
         ]
         
-        with patch.object(analyzer, 'analyze_news', new_callable=AsyncMock) as mock_analyze:
+        with patch.object(analyzer, 'analyze_news_full', new_callable=AsyncMock) as mock_analyze:
             mock_analyze.return_value = {
                 "sentiment_score": 50,
                 "keywords": ["test"],
@@ -239,13 +212,7 @@ class TestNewsAnalyzer:
         """测试情感分数边界处理"""
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
             # 测试超出范围的分数
-            mock_chat.return_value = {
-                "choices": [{
-                    "message": {
-                        "content": '{"sentiment_score": 150}'  # 超出范围
-                    }
-                }]
-            }
+            mock_chat.return_value = '{"sentiment_score": 150}'
             
             score = await analyzer.analyze_sentiment("Test", "Test content")
             
@@ -258,15 +225,9 @@ class TestNewsAnalyzer:
         """测试 JSON 解析错误处理"""
         with patch('app.core.analyzer.llm_client.chat_completion', new_callable=AsyncMock) as mock_chat:
             # 返回无效的 JSON
-            mock_chat.return_value = {
-                "choices": [{
-                    "message": {
-                        "content": 'Invalid JSON {{'
-                    }
-                }]
-            }
+            mock_chat.return_value = 'Invalid JSON {{'
             
             score = await analyzer.analyze_sentiment("Test", "Test content")
             
             # 应该返回默认值
-            assert score == 0
+            assert score == None

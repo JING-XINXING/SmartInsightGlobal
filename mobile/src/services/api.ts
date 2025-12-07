@@ -29,7 +29,7 @@ class ApiService {
   private refreshSubscribers: Array<(token: string) => void> = [];
 
   constructor() {
-    this.baseURL = process.env.API_BASE_URL || 'http://localhost:8000/api/v1';
+    this.baseURL = process.env.API_BASE_URL || 'http://localhost:8001/api/v1';
 
     this.client = axios.create({
       baseURL: this.baseURL,

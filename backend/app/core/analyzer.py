@@ -5,6 +5,7 @@ from app.core.llm_client import llm_client
 from app.core.logger import logger
 
 import random
+import asyncio
 
 class NewsAnalyzer:
     """
@@ -235,7 +236,6 @@ class NewsAnalyzer:
         }
         
         # Run analyses in parallel for efficiency
-        import asyncio
         tasks = [
             self.analyze_sentiment(title, content),
             self.extract_keywords(title, content),
@@ -258,6 +258,41 @@ class NewsAnalyzer:
             results["location"] = results_list[3]
         
         logger.info(f"Full analysis completed: {results}")
+        return results
+
+    async def batch_analyze(self, news_list: List[Dict], batch_size: int = 5) -> List[Dict]:
+        """
+        Batch analyze news list.
+        Args:
+            news_list: List of dicts with 'title' and 'content' keys
+            batch_size: Number of concurrent tasks
+        Returns:
+            List of analysis result dicts
+        """
+        results = []
+        for i in range(0, len(news_list), batch_size):
+            batch = news_list[i : i + batch_size]
+            tasks = [
+                self.analyze_news_full(
+                    item.get('title', ''), 
+                    item.get('content', ''),
+                    extract_location=item.get('extract_location', False)
+                ) for item in batch
+            ]
+            batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            for res in batch_results:
+                if isinstance(res, Exception):
+                    logger.error(f"Batch analysis item failed: {res}")
+                    results.append({
+                        "sentiment_score": None, 
+                        "keywords": None, 
+                        "category": "其他", 
+                        "location": None
+                    })
+                else:
+                    results.append(res)
+            
         return results
 
 # Global instance

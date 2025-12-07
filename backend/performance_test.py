@@ -17,7 +17,7 @@ class PerformanceBenchmark:
     """性能基准测试器"""
 
     def __init__(self):
-        self.base_url = "http://localhost:8000"
+        self.base_url = "http://localhost:8001"
         self.results = {}
 
     async def test_api_endpoint(

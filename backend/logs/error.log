@@ -17376,3 +17376,182 @@ WHERE users.email = $1::VARCHAR]
 2025-12-06 16:59:21 - smartinsight - ERROR - Registration failed: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
 2025-12-06 17:00:48 - smartinsight - ERROR - Registration failed: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
 2025-12-06 18:35:40 - smartinsight - ERROR - Sentiment trend prediction failed: Expecting ',' delimiter: line 8 column 4 (char 300)
+2025-12-07 08:29:41 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object, got 'dict'
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/re/__init__.py", line 177, in search
+    return _compile(pattern, flags).search(string)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected string or bytes-like object, got 'dict'
+2025-12-07 08:29:41 - smartinsight - ERROR - Error in keyword extraction: expected string or bytes-like object, got 'dict'
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 99, in extract_keywords
+    match = re.search(r'\[.*?\]', response, re.DOTALL)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/re/__init__.py", line 177, in search
+    return _compile(pattern, flags).search(string)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected string or bytes-like object, got 'dict'
+2025-12-07 08:29:42 - smartinsight - ERROR - Error in location extraction: expected string or bytes-like object, got 'dict'
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 204, in extract_location
+    match = re.search(r'\{.*?\}', response, re.DOTALL)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/re/__init__.py", line 177, in search
+    return _compile(pattern, flags).search(string)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected string or bytes-like object, got 'dict'
+2025-12-07 08:29:42 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object, got 'dict'
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/re/__init__.py", line 177, in search
+    return _compile(pattern, flags).search(string)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected string or bytes-like object, got 'dict'
+2025-12-07 08:29:42 - smartinsight - ERROR - Error in sentiment analysis: expected string or bytes-like object, got 'dict'
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 51, in analyze_sentiment
+    match = re.search(r'-?\d+', response)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/re/__init__.py", line 177, in search
+    return _compile(pattern, flags).search(string)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected string or bytes-like object, got 'dict'
+2025-12-07 08:29:42 - smartinsight - ERROR - Unexpected error fetching http://example.com/rss.xml: Timeout
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/crawler.py", line 24, in fetch_feed
+    response = await client.get(url, timeout=15.0)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/unittest/mock.py", line 2262, in _execute_mock_call
+    raise effect
+Exception: Timeout
+2025-12-07 08:29:42 - smartinsight - ERROR - HTTP error 404 fetching http://example.com/rss.xml: 404
+2025-12-07 08:29:42 - smartinsight - ERROR - Unexpected error fetching http://example.com/rss.xml: 网络错误
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/crawler.py", line 24, in fetch_feed
+    response = await client.get(url, timeout=15.0)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/unittest/mock.py", line 2262, in _execute_mock_call
+    raise effect
+Exception: 网络错误
+2025-12-07 08:29:43 - smartinsight - ERROR - Unexpected error fetching http://example.com/error.xml: 测试错误
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/crawler.py", line 24, in fetch_feed
+    response = await client.get(url, timeout=15.0)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xinxingjing/opt/anaconda3/lib/python3.12/unittest/mock.py", line 2262, in _execute_mock_call
+    raise effect
+Exception: 测试错误
+2025-12-07 08:29:45 - smartinsight - ERROR - Error from deepseek: 401 - <Mock name='mock.text' id='4532028720'>
+2025-12-07 08:29:45 - smartinsight - ERROR - Timeout calling LLM API deepseek at https://api.deepseek.com
+2025-12-07 08:29:45 - smartinsight - ERROR - Unexpected response format from deepseek: {'invalid': 'format'}
+2025-12-07 08:29:46 - smartinsight - ERROR - 获取调度器配置失败: Redis连接错误
+2025-12-07 08:29:46 - smartinsight - ERROR - 更新调度器配置失败: Redis写入错误
+2025-12-07 08:29:46 - smartinsight - ERROR - 获取调度器配置失败: Expecting value: line 1 column 1 (char 0)
+2025-12-07 08:39:19 - smartinsight - ERROR - Failed to get location clusters: 1 validation error for LocationCluster
+country_cn
+  Field required [type=missing, input_value={'country': 'United State... 'avg_sentiment': -13.6}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+2025-12-07 08:41:01 - smartinsight - ERROR - Error in sentiment analysis: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 42, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:41:01 - smartinsight - ERROR - Error in keyword extraction: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 89, in extract_keywords
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 42, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:41:01 - smartinsight - ERROR - Error in categorization: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 142, in categorize_news
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 89, in extract_keywords
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 42, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:41:44 - smartinsight - ERROR - Error in sentiment analysis: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 43, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:41:44 - smartinsight - ERROR - Error in keyword extraction: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 90, in extract_keywords
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 43, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:41:44 - smartinsight - ERROR - Error in categorization: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 143, in categorize_news
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 90, in extract_keywords
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 43, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:42:06 - smartinsight - ERROR - Error in sentiment analysis: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 43, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:42:06 - smartinsight - ERROR - Error in keyword extraction: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 90, in extract_keywords
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 43, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error
+2025-12-07 08:42:06 - smartinsight - ERROR - Error in categorization: API Error
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 143, in categorize_news
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 90, in extract_keywords
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 43, in analyze_sentiment
+    response = await llm_client.chat_completion(
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
+    raise effect
+Exception: API Error

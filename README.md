@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![Next.js](https://img.shields.io/badge/next.js-16-black.svg)
-![Status](https://img.shields.io/badge/status-V1.1%20Released-green.svg)
+![Status](https://img.shields.io/badge/status-V1.4.1%20Released-green.svg)
 
 ## 📖 项目简介
 
@@ -19,13 +19,30 @@ SmartInsight Global 是一个智能化的全球资讯采集与分析平台，通
 - 🏷️ **关键词提取**: AI 自动提取 3-5 个关键词
 - 📑 **智能分类**: 12 个预定义类别自动分类
 - 📈 **数据可视化**: 仪表盘展示情感分布、分类统计、热门关键词
-- 🗺️ **全球热点地图**: 新闻地理位置可视化 (V1.1 新增)
-- 📅 **事件时间轴**: 事件聚类与发展脉络 (V1.1 新增)
-- 🔍 **全文搜索**: PostgreSQL 全文检索 (V1.1 新增)
-- 💾 **数据备份**: 自动备份与云端同步 (V1.1 新增)
-- ⏰ **定时任务**: 可配置的自动采集和分析频率
-- 📄 **分页浏览**: 支持分页查看新闻列表
-- ⚡ **高性能**: 异步架构，Celery 定时任务，Redis 缓存
+- 🗺️ **全球热点地图**: 新闻地理位置可视化
+- 📅 **事件时间轴**: 事件聚类与发展脉络
+- 🔐 **用户认证**: JWT 认证 + RBAC 权限控制 (V1.4 新增)
+- 🧠 **高级分析**: 实体识别、关系抽取、趋势预测 (V1.4 新增)
+- 📄 **报告生成**: 自动生成分析报告 (V1.4.1 新增)
+## 🚀 Core Features
+
+### 1. Global Intelligence Collection
+- **Multi-Source Crawler**: Aggregates news from 17+ international sources via RSS.
+- **Real-time Processing**: Async pipelines for high-concurrency data fetching.
+
+### 2. Advanced AI Analysis Engine (V1.4)
+- **Deep Understanding**: Goes beyond summary. Performs Sentiment Analysis, Entity Recognition (NER), and Relation Extraction.
+- **Trend Prediction**: Algorithms to forecast future trend directions based on historical data.
+- **Multi-Model Support**: Switch between DeepSeek, Qwen, and other OpenAI-compatible APIs.
+
+### 3. Smart Visualization
+- **Global Heatmap**: Interactive SVG map showing news hotspots.
+- **Event Timeline**: Clustered timeline of major global events.
+- **Dashboard**: Real-time charts for sentiment distribution and keyword trends.
+
+### 4. Enterprise-Grade Security (V1.4)
+- **JWT Authentication**: Secure login/registration with role-based access.
+- **Data Safety**: Dual backup strategy (Local + Cloud Object Storage).
 
 ## 🏗️ 技术架构
 
@@ -135,12 +152,26 @@ celery -A app.worker.celery_app beat --loglevel=info
 
 | 页面 | 地址 | 说明 |
 |------|------|------|
-| 首页 | http://localhost:3000 | 新闻列表（分页） |
-| 热点地图 | http://localhost:3000/map | 全球新闻地理分布 |
-| 事件时间轴 | http://localhost:3000/events | 事件聚类与脉络 |
-| 搜索 | http://localhost:3000/search | 全文搜索 |
-| 数据分析 | http://localhost:3000/dashboard | 可视化仪表盘 |
-| API 文档 | http://localhost:8000/docs | Swagger API 文档 |
+| 首页 | http://localhost:3001 | 新闻列表（分页） |
+| 登录 | http://localhost:3001/login | 用户登录 |
+| 注册 | http://localhost:3001/register | 用户注册 |
+| 热点地图 | http://localhost:3001/map | 全球新闻地理分布 |
+| 事件时间轴 | http://localhost:3001/events | 事件聚类与脉络 |
+| 搜索 | http://localhost:3001/search | 全文搜索 |
+| 数据分析 | http://localhost:3001/dashboard | 可视化仪表盘 |
+| 高级分析 | http://localhost:3001/analysis | AI 深度分析工具 |
+| 报告生成 | http://localhost:3001/reports | 分析报告生成 |
+| 个人资料 | http://localhost:3001/profile | 用户资料管理 |
+| 设置 | http://localhost:3001/settings | 账户设置 |
+| API 文档 | http://localhost:8001/docs | Swagger API 文档 |
+
+### 默认账户
+
+| 角色 | 用户名 | 密码 | 权限 |
+|------|--------|------|------|
+| 管理员 | admin | admin123 | 所有权限 |
+| 分析师 | analyst | analyst123 | 分析、报告生成 |
+| 查看者 | viewer | viewer123 | 查看、导出 |
 
 ## 📁 项目结构
 
@@ -309,34 +340,33 @@ SmartInsightGlobal/
 - [x] 地理位置提取
 - [x] 数据备份系统
 
-### 🚧 V1.2 阶段 (2025-12-01 - 2025-12-31)
-**主题**: 质量提升与性能优化
+### ✅ V1.2 阶段 (已完成)
+- [x] 测试体系基础建设
+- [x] Redis 缓存层优化
+- [x] 数据库连接池调优
 
-**核心目标**:
-- [ ] 测试覆盖率从 35% 提升到 70%+
-- [ ] API 响应时间优化 30% (<200ms)
-- [ ] 完善监控告警系统
-- [ ] 实现高可用部署方案
+### ✅ V1.3 阶段 (已完成)
+- [x] 后端架构模块化重构
+- [x] Alembic 数据库迁移集成
+- [x] 前端组件库升级
 
-**详细计划**:
-- [ ] 第1周: 测试体系建设 (pytest, Jest, 单元测试, 集成测试)
-- [ ] 第2周: 性能优化 (Redis 缓存, 数据库优化, 前端优化)
-- [ ] 第3周: 用户体验增强 (错误边界, 骨架屏, 移动端优化)
-- [ ] 第4周: 系统监控与部署 (Prometheus, Grafana, 负载均衡)
+### ✅ V1.4 阶段 (2025-12-01 - 2025-12-07)
+- [x] JWT 用户认证系统
+- [x] 高级 AI 分析引擎 (NER, 关系抽取)
+- [x] 趋势预测算法
+- [x] 国际化后端架构
 
-### 📋 V2.0 阶段 (远期规划 - 2-3个月)
-- [ ] 用户认证系统
-- [ ] AI 日报/周报生成
-- [ ] 多语言支持 (i18n)
-- [ ] 实时推送通知
-- [ ] PWA 移动端支持
-- [ ] 自定义 RSS 源管理
+### 🚧 V1.5 阶段 (2025-12-08 - 2025-12-21)
+**主题**: 功能闭环与稳定性
+- [ ] 报表生成系统 (前端)
+- [ ] 国际化系统 (前端)
+- [ ] 移动端 App 基础集成
+- [ ] 测试覆盖率达到 70%
 
-### 🚀 V3.0 阶段 (远期规划 - 6个月+)
+### 📋 V2.0 阶段 (远期规划 - 2026 Q1)
 - [ ] SaaS 多租户架构
-- [ ] 高级分析报告
-- [ ] 企业级数据安全
-- [ ] 商业化功能
+- [ ] 实时推送通知
+- [ ] 商业化功能 (订阅支付)
 
 ## 🔧 常见问题
 
@@ -381,6 +411,28 @@ MIT License
 
 ---
 
-**最后更新**: 2025-12-02  
-**当前版本**: V1.1 (已完成)  
-**下一版本**: V1.2 (规划中，2025-12-01 - 2025-12-31)
+**最后更新**: 2025-12-07  
+**当前版本**: V1.4.1 (已发布)  
+**下一版本**: V1.5 (计划中)
+
+## 🎯 V1.4.1 更新亮点
+
+### 新增功能
+- ✅ 个人资料页面（用户信息编辑）
+- ✅ 设置页面（密码修改、角色显示）
+- ✅ 高级分析页面（综合分析、情感分析、实体识别）
+- ✅ 报告生成功能（新闻分析、情感趋势）
+
+### 问题修复
+- ✅ 修复登录后角色显示错误
+- ✅ 修复 LLM 选择器无法使用
+- ✅ 修复报告生成权限问题
+- ✅ 修复多个 TypeScript 编译错误
+
+### 优化改进
+- ✅ 错误处理增强
+- ✅ 类型安全完善
+- ✅ 用户体验优化
+
+查看完整更新日志: [CHANGELOG.md](./CHANGELOG.md)
+

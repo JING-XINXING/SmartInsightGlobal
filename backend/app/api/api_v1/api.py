@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.api.api_v1.endpoints import (
     news, llm, scheduler, map_simple, events, auth_simple, i18n_simple,
-    advanced_analysis_simple, reports_simple
+    advanced_analysis_simple, reports
 )
 
 api_router = APIRouter()
@@ -19,4 +19,4 @@ api_router.include_router(i18n_simple.router, prefix="/i18n", tags=["internation
 
 # V1.3高级分析和报告端点（简化版，避免循环依赖）
 api_router.include_router(advanced_analysis_simple.router, prefix="/analysis", tags=["advanced_analysis"])
-api_router.include_router(reports_simple.router, prefix="/reports", tags=["report_generation"])
+api_router.include_router(reports.router, prefix="/reports", tags=["report_generation"])

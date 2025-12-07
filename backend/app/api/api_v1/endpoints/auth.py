@@ -3,7 +3,7 @@
 JWT认证、用户注册、登录、权限验证等功能
 """
 from datetime import datetime, timedelta, timezone
-from typing import Any
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
@@ -57,7 +57,7 @@ class UserResponse(BaseModel):
     is_active: bool
     is_verified: bool
     created_at: datetime
-    last_login: datetime | None
+    last_login: Optional[datetime]
     permissions: list[str]
 
 
@@ -87,9 +87,9 @@ class PasswordResetConfirm(BaseModel):
 
 class UserProfile(BaseModel):
     """用户资料模型"""
-    first_name: str | None = None
-    last_name: str | None = None
-    bio: str | None = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    bio: Optional[str] = None
     timezone: str = "UTC"
     language: str = "zh-CN"
     notification_settings: dict = {}
@@ -291,13 +291,12 @@ async def register_user(user_data: UserCreate, request: Request, db: AsyncSessio
 
 @router.post("/login", response_model=Token)
 async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
     request: Request,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db)
 ):
     """
     用户登录
-    """
     - 验证用户凭据
     - 生成访问和刷新令牌
     - 创建用户会话
@@ -373,7 +372,6 @@ async def refresh_access_token(
 ):
     """
     刷新访问令牌
-    """
     - 验证刷新令牌
     - 生成新的访问令牌
     - 更新会话
@@ -449,7 +447,6 @@ async def logout(
 ):
     """
     用户登出
-    """
     - 验证访问令牌
     - 使会话失效
     - 记录登出日志
@@ -527,7 +524,6 @@ async def logout(
 async def read_users_me(current_user: User = Depends(get_current_user)):
     """
     获取当前用户信息
-    """
     - 验证用户身份
     - 返回用户信息
     """
@@ -549,11 +545,10 @@ async def read_users_me(current_user: User = Depends(get_current_user)):
 async def update_user_profile(
     profile_data: UserProfile,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = DBSession
+    db: AsyncSession = Depends(get_db)
 ):
     """
     更新用户资料
-    """
     - 验证用户身份
     - 更新用户信息
     - 记录审计日志
@@ -640,7 +635,6 @@ async def change_password(
 ):
     """
     修改密码
-    """
     - 验证当前密码
     - 设置新密码
     - 更新用户记录
@@ -698,7 +692,6 @@ async def forgot_password(
 ):
     """
     忘记密码
-    """
     - 验证用户邮箱
     - 生成重置令牌
     - 发送重置邮件（TODO: 集成邮件服务）
@@ -759,7 +752,6 @@ async def reset_password(
 ):
     """
     重置密码
-    """
     - 验证重置令牌
     - 设置新密码
     - 清除重置令牌
@@ -827,7 +819,6 @@ async def reset_password(
 async def get_permissions(current_user: User = Depends(get_current_user)):
     """
     获取用户权限列表
-    """
     - 验证用户身份
     - 返回用户权限
     """
@@ -846,7 +837,6 @@ async def get_permissions(current_user: User = Depends(get_current_user)):
 async def check_auth(current_user: User = Depends(get_current_user)):
     """
     检查认证状态
-    """
     - 验证令牌有效性
     - 返回用户简要信息
     """
@@ -859,19 +849,22 @@ async def check_auth(current_user: User = Depends(get_current_user)):
     }
 
 
-# 权限测试端点
 @router.get("/test-permission/{permission}")
-@require_permission(permission)
 async def test_permission(
     permission: str,
     current_user: User = Depends(get_current_user)
 ):
     """
     测试用户权限
-    """
     - 验证用户权限
     - 返回测试结果
     """
+    if not current_user.has_permission(permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Permission denied: {permission} required"
+        )
+
     return {
         "has_permission": True,
         "permission": permission,
