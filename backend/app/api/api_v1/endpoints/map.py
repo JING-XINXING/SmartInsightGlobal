@@ -13,6 +13,7 @@ from app.db import session
 from app.core.logger import logger
 from app.core.geo_heatmap import advanced_geo_heatmap_analyzer, TimeRange
 from app.models.user import User
+from app.api.api_v1.endpoints.auth import get_current_user, require_permission
 
 router = APIRouter()
 
@@ -148,7 +149,17 @@ async def get_location_clusters(
         country = loc.get("country")
         if not country:
             continue
-        
+
+        # 处理country可能是列表的情况
+        if isinstance(country, list):
+            if len(country) == 0:
+                continue
+            country = country[0]  # 取第一个国家名称
+
+        # 确保country是字符串类型
+        if not isinstance(country, str):
+            continue
+
         if country not in country_data:
             country_data[country] = {
                 "country": country,
@@ -247,7 +258,17 @@ async def get_map_stats(
         country = loc.get("country")
         if not country:
             continue
-        
+
+        # 处理country可能是列表的情况
+        if isinstance(country, list):
+            if len(country) == 0:
+                continue
+            country = country[0]  # 取第一个国家名称
+
+        # 确保country是字符串类型
+        if not isinstance(country, str):
+            continue
+
         if country not in country_data:
             country_data[country] = {
                 "country": country,

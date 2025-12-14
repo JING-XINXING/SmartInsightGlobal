@@ -17555,3 +17555,102 @@ Traceback (most recent call last):
   File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 2154, in _execute_mock_call
     raise effect
 Exception: API Error
+2025-12-12 21:33:26 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-12 21:33:26 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:25:56 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:25:56 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:26:02 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:26:14 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:26:14 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:26:18 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:26:18 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:26:21 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:26:21 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:27:53 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c72aaa2d4a11df09f6f5ecc614b00"}
+
+2025-12-13 18:28:02 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:02 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:04 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:05 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:05 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:05 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:08 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:08 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:08 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:12 - smartinsight - ERROR - Error in location extraction: Expecting ',' delimiter: line 6 column 17 (char 100)
+Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/core/analyzer.py", line 207, in extract_location
+    location = json.loads(match.group())
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/json/decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 6 column 17 (char 100)
+2025-12-13 18:28:12 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:12 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:17 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:17 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:28:58 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c72ea5c872578475f593558aa4e7e"}
+
+2025-12-13 18:29:05 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c72f28275cc529e60cc4ab93ffe5d"}
+
+2025-12-13 18:29:43 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c7317e320be6e99055c3c9f4c0c12"}
+
+2025-12-13 18:29:50 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c731ee5860889f32e1f257bb0d02b"}
+
+2025-12-13 18:29:58 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c732635c914fd65d37198a34ae554"}
+
+2025-12-13 18:30:02 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c732a7b27d8ef3eb422b6f06788e9"}
+
+2025-12-13 18:30:14 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c73367c59c6be1bc78bc0b823461d"}
+
+2025-12-13 18:30:16 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c7338ea19278f4fd71a32da6a4b23"}
+
+2025-12-13 18:30:26 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c73423f6ffdb98662fedb349519ff"}
+
+2025-12-13 18:30:30 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c7346910566b9a32085ac28d33103"}
+
+2025-12-13 18:30:49 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c7359f2d44ec0f891672ee1595939"}
+
+2025-12-13 18:30:49 - smartinsight - ERROR - Error from minimax: 429 - {"type":"error","error":{"type":"insufficient_balance_error","message":"insufficient balance (1008)","http_code":"429"},"request_id":"058c7359129fc6d2b94b3a6628ef1879"}
+
+2025-12-13 18:42:12 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:42:12 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:42:19 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:42:19 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:43:24 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 18:43:24 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 19:03:22 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 19:03:22 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 19:08:21 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 19:08:21 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 19:08:32 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-13 19:08:32 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 10:59:41 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 10:59:41 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 10:59:52 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 10:59:52 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 10:59:54 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:02:02 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:02:07 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:02:10 - smartinsight - ERROR - Failed to get location clusters: unhashable type: 'list'
+2025-12-14 11:07:35 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:07:36 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:07:38 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:07:38 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:08:49 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:10:39 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:10:51 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:10:51 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:11:04 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:11:04 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:12:54 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:13:56 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:15:03 - smartinsight - ERROR - Failed to get map stats: unhashable type: 'list'
+2025-12-14 11:15:03 - smartinsight - ERROR - Traceback: Traceback (most recent call last):
+  File "/Users/xinxingjing/AI/SmartInsightGlobal/backend/app/api/api_v1/endpoints/map_simple.py", line 240, in get_map_stats
+    if country not in country_data:
+TypeError: unhashable type: 'list'
+

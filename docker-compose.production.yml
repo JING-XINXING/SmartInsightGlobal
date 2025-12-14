@@ -1,0 +1,180 @@
+version: '3.8'
+
+# SmartInsight Global V1.5 生产环境部署配置
+# 使用方法: docker-compose -f docker-compose.production.yml up -d
+
+services:
+  # PostgreSQL 数据库
+  db:
+    image: postgres:15-alpine
+    container_name: smartinsight-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-smartinsight}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_password_here}
+      POSTGRES_DB: ${DB_NAME:-smartinsight}
+      # 性能优化参数
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/backup:/backup
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-smartinsight}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - smartinsight-network
+
+  # Redis 缓存和消息队列
+  redis:
+    image: redis:7-alpine
+    container_name: smartinsight-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - smartinsight-network
+
+  # 后端 API 服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartinsight-backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-smartinsight}:${DB_PASSWORD:-secure_password_here}@db:5432/${DB_NAME:-smartinsight}
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-here}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+      - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS:-7}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - QWEN_API_KEY=${QWEN_API_KEY:-}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./backend/reports:/app/reports
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - smartinsight-network
+
+  # Celery Worker (后台任务)
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartinsight-celery-worker
+    restart: unless-stopped
+    command: celery -A app.worker worker --loglevel=info --concurrency=2
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-smartinsight}:${DB_PASSWORD:-secure_password_here}@db:5432/${DB_NAME:-smartinsight}
+      - REDIS_URL=redis://redis:6379/0
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - QWEN_API_KEY=${QWEN_API_KEY:-}
+      - ENVIRONMENT=production
+    volumes:
+      - ./backend/logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smartinsight-network
+
+  # Celery Beat (定时任务调度)
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartinsight-celery-beat
+    restart: unless-stopped
+    command: celery -A app.worker beat --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-smartinsight}:${DB_PASSWORD:-secure_password_here}@db:5432/${DB_NAME:-smartinsight}
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=production
+    volumes:
+      - ./backend/logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smartinsight-network
+
+  # 前端服务 (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+    container_name: smartinsight-frontend
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://backend:8000/api/v1}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - smartinsight-network
+
+  # Nginx 反向代理 (可选)
+  nginx:
+    image: nginx:alpine
+    container_name: smartinsight-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - smartinsight-network
+    profiles:
+      - with-nginx
+
+networks:
+  smartinsight-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
