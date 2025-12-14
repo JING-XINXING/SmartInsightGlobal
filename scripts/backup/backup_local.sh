@@ -24,7 +24,7 @@ set -e  # 遇到错误立即退出
 DB_HOST="${POSTGRES_SERVER:-localhost}"
 DB_PORT="${POSTGRES_PORT:-5432}"
 DB_NAME="${POSTGRES_DB:-smartinsight}"
-DB_USER="${POSTGRES_USER:-xinxingjing}"
+DB_USER="${POSTGRES_USER:-postgres}"
 
 # 备份目录（可通过参数覆盖）
 BACKUP_DIR="${1:-${BACKUP_DIR:-$HOME/backups/smartinsight}}"

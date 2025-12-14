@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     
     # 数据库配置
     POSTGRES_SERVER: str = "localhost"
-    POSTGRES_USER: str = "xinxingjing"
+    POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DB: str = "smartinsight"
     POSTGRES_PORT: str = "5432"

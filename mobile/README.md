@@ -113,7 +113,7 @@ mobile/
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-repo/SmartInsightGlobal.git
+git clone https://github.com/JING-XINXING/SmartInsightGlobal.git
 cd SmartInsightGlobal/mobile
 
 # 安装依赖

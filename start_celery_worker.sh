@@ -1,9 +1,12 @@
 #!/bin/bash
 # SmartInsightGlobal Celery 启动脚本
 
+# 获取脚本所在目录的绝对路径
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # 设置环境变量
-export PYTHONPATH="${PYTHONPATH}:/Users/xinxingjing/AI/SmartInsightGlobal/backend"
-cd /Users/xinxingjing/AI/SmartInsightGlobal/backend
+export PYTHONPATH="${PYTHONPATH}:${SCRIPT_DIR}/backend"
+cd "${SCRIPT_DIR}/backend"
 
 echo "正在启动 Celery Worker..."
 

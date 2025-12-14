@@ -3,7 +3,7 @@ import asyncpg
 
 async def create_db():
     try:
-        conn = await asyncpg.connect(user='xinxingjing', database='postgres', host='localhost')
+        conn = await asyncpg.connect(user='postgres', database='postgres', host='localhost')
         await conn.execute('CREATE DATABASE smartinsight')
         print("Database 'smartinsight' created successfully!")
         await conn.close()

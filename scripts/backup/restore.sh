@@ -21,7 +21,7 @@ set -e
 
 DB_HOST="${POSTGRES_SERVER:-localhost}"
 DB_PORT="${POSTGRES_PORT:-5432}"
-DB_USER="${POSTGRES_USER:-xinxingjing}"
+DB_USER="${POSTGRES_USER:-postgres}"
 DEFAULT_DB="${POSTGRES_DB:-smartinsight}"
 
 # ==================== 函数定义 ====================
@@ -49,7 +49,7 @@ SmartInsight Global - 数据库恢复脚本
 环境变量：
     POSTGRES_SERVER     数据库服务器地址（默认: localhost）
     POSTGRES_PORT       数据库端口（默认: 5432）
-    POSTGRES_USER       数据库用户名（默认: xinxingjing）
+    POSTGRES_USER       数据库用户名（默认: postgres）
     POSTGRES_PASSWORD   数据库密码
     POSTGRES_DB         默认数据库名（默认: smartinsight）
 
