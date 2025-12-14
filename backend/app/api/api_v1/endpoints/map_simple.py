@@ -79,19 +79,40 @@ async def get_news_with_locations(
         locations = []
         for news in news_list:
             loc = news.location or {}
-            if loc.get("lat") and loc.get("lng"):
-                locations.append(NewsLocation(
-                    id=news.id,
-                    title=news.title,
-                    source=news.source,
-                    publish_date=news.publish_date.isoformat() if news.publish_date else "",
-                    sentiment_score=news.sentiment_score,
-                    category=news.category,
-                    country=loc.get("country"),
-                    city=loc.get("city"),
-                    lat=loc.get("lat"),
-                    lng=loc.get("lng")
-                ))
+            lat = loc.get("lat")
+            lng = loc.get("lng")
+            
+            # 确保坐标有效
+            if not lat or not lng:
+                continue
+            # 处理坐标可能是list的情况
+            if isinstance(lat, list):
+                lat = lat[0] if lat else None
+            if isinstance(lng, list):
+                lng = lng[0] if lng else None
+            if not lat or not lng:
+                continue
+                
+            # 获取其他字段，处理可能是list的情况
+            country = loc.get("country")
+            if isinstance(country, list):
+                country = country[0] if country else None
+            city = loc.get("city")
+            if isinstance(city, list):
+                city = city[0] if city else None
+                
+            locations.append(NewsLocation(
+                id=news.id,
+                title=news.title,
+                source=news.source,
+                publish_date=news.publish_date.isoformat() if news.publish_date else "",
+                sentiment_score=news.sentiment_score,
+                category=news.category,
+                country=country,
+                city=city,
+                lat=float(lat) if lat else None,
+                lng=float(lng) if lng else None
+            ))
 
         logger.info(f"返回 {len(locations)} 条带位置的新闻")
         return locations
@@ -126,21 +147,42 @@ async def get_location_clusters(
         for news in news_list:
             loc = news.location or {}
             country = loc.get("country")
+            
+            # 跳过无效的country值
             if not country:
                 continue
+            # 如果country是list，取第一个元素
+            if isinstance(country, list):
+                country = country[0] if country else None
+                if not country:
+                    continue
+            # 确保country是字符串
+            if not isinstance(country, str):
+                country = str(country)
+            
+            # 处理坐标
+            lat = loc.get("lat", 0)
+            lng = loc.get("lng", 0)
+            if isinstance(lat, list):
+                lat = lat[0] if lat else 0
+            if isinstance(lng, list):
+                lng = lng[0] if lng else 0
 
             if country not in country_data:
                 country_data[country] = {
                     "country": country,
-                    "lat": loc.get("lat", 0),
-                    "lng": loc.get("lng", 0),
+                    "lat": float(lat) if lat else 0,
+                    "lng": float(lng) if lng else 0,
                     "count": 0,
                     "sentiment_sum": 0
                 }
 
             country_data[country]["count"] += 1
             if news.sentiment_score is not None:
-                country_data[country]["sentiment_sum"] += news.sentiment_score
+                score = news.sentiment_score
+                if isinstance(score, list):
+                    score = score[0] if score else 0
+                country_data[country]["sentiment_sum"] += float(score) if score else 0
 
         # 转换为响应格式
         clusters = []
@@ -204,20 +246,44 @@ async def get_map_stats(
         locations = []
         for news in news_list:
             loc = news.location or {}
-            if loc.get("lat") and loc.get("lng"):
-                locations.append(NewsLocation(
-                    id=news.id,
-                    title=news.title,
-                    source=news.source,
-                    publish_date=news.publish_date.isoformat() if news.publish_date else "",
-                    sentiment_score=news.sentiment_score,
-                    category=news.category,
-                    country=loc.get("country"),
-                    country_cn=loc.get("country_cn"),
-                    city=loc.get("city"),
-                    lat=loc.get("lat"),
-                    lng=loc.get("lng")
-                ))
+            lat = loc.get("lat")
+            lng = loc.get("lng")
+            
+            # 确保坐标有效
+            if not lat or not lng:
+                continue
+            # 处理坐标可能是list的情况
+            if isinstance(lat, list):
+                lat = lat[0] if lat else None
+            if isinstance(lng, list):
+                lng = lng[0] if lng else None
+            if not lat or not lng:
+                continue
+                
+            # 获取country，处理可能是list的情况
+            country = loc.get("country")
+            if isinstance(country, list):
+                country = country[0] if country else None
+            country_cn = loc.get("country_cn")
+            if isinstance(country_cn, list):
+                country_cn = country_cn[0] if country_cn else None
+            city = loc.get("city")
+            if isinstance(city, list):
+                city = city[0] if city else None
+                
+            locations.append(NewsLocation(
+                id=news.id,
+                title=news.title,
+                source=news.source,
+                publish_date=news.publish_date.isoformat() if news.publish_date else "",
+                sentiment_score=news.sentiment_score,
+                category=news.category,
+                country=country,
+                country_cn=country_cn,
+                city=city,
+                lat=float(lat) if lat else None,
+                lng=float(lng) if lng else None
+            ))
 
         # 获取聚合数据
         clusters_query = select(models.news.News).where(
@@ -234,15 +300,38 @@ async def get_map_stats(
         for news in all_news:
             loc = news.location or {}
             country = loc.get("country")
+            
+            # 跳过无效的country值（None、空字符串、或非字符串类型）
             if not country:
                 continue
+            # 如果country是list，取第一个元素
+            if isinstance(country, list):
+                country = country[0] if country else None
+                if not country:
+                    continue
+            # 确保country是字符串
+            if not isinstance(country, str):
+                country = str(country)
 
             if country not in country_data:
+                # 处理country_cn
+                country_cn = loc.get("country_cn", country)
+                if isinstance(country_cn, list):
+                    country_cn = country_cn[0] if country_cn else country
+                    
+                # 处理lat和lng
+                lat = loc.get("lat", 0)
+                lng = loc.get("lng", 0)
+                if isinstance(lat, list):
+                    lat = lat[0] if lat else 0
+                if isinstance(lng, list):
+                    lng = lng[0] if lng else 0
+                    
                 country_data[country] = {
                     "country": country,
-                    "country_cn": loc.get("country_cn", country),
-                    "lat": loc.get("lat", 0),
-                    "lng": loc.get("lng", 0),
+                    "country_cn": country_cn,
+                    "lat": float(lat) if lat else 0,
+                    "lng": float(lng) if lng else 0,
                     "count": 0,
                     "sentiment_sum": 0,
                     "news_ids": []
@@ -250,7 +339,10 @@ async def get_map_stats(
 
             country_data[country]["count"] += 1
             if news.sentiment_score is not None:
-                country_data[country]["sentiment_sum"] += news.sentiment_score
+                score = news.sentiment_score
+                if isinstance(score, list):
+                    score = score[0] if score else 0
+                country_data[country]["sentiment_sum"] += float(score) if score else 0
             country_data[country]["news_ids"].append(news.id)
 
         clusters = []
@@ -276,7 +368,9 @@ async def get_map_stats(
         )
 
     except Exception as e:
+        import traceback
         logger.error(f"Failed to get map stats: {e}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         return MapDataResponse(
             locations=[],
             clusters=[],
