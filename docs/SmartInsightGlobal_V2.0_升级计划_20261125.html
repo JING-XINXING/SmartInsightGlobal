@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartInsight Global V2.0 版本升级计划</title>
+<style>
+  :root {
+    --color-bg: #fafafa;
+    --color-surface: #ffffff;
+    --color-text: #1a1a2e;
+    --color-text-secondary: #555770;
+    --color-primary: #2563eb;
+    --color-primary-light: #dbeafe;
+    --color-accent: #0d9488;
+    --color-accent-light: #ccfbf1;
+    --color-warning: #d97706;
+    --color-warning-light: #fef3c7;
+    --color-danger: #dc2626;
+    --color-danger-light: #fee2e2;
+    --color-success: #16a34a;
+    --color-success-light: #dcfce7;
+    --color-border: #e2e5ea;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --radius: 8px;
+    --content-width: 1040px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* 顶栏 */
+  .topbar {
+    width: 100%;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    color: #fff;
+    padding: 48px 24px;
+  }
+  .topbar-inner {
+    max-width: var(--content-width);
+    margin: 0 auto;
+  }
+  .topbar h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .topbar .subtitle {
+    font-size: 16px;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .topbar .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+    font-size: 13px;
+    opacity: 0.8;
+  }
+  .topbar .meta-row span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* 主体 */
+  .main {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+
+  /* 目录 */
+  .toc {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 36px;
+    box-shadow: var(--shadow-sm);
+  }
+  .toc h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--color-text-secondary);
+  }
+  .toc ol {
+    padding-left: 20px;
+    columns: 2;
+    column-gap: 32px;
+  }
+  .toc li { margin-bottom: 6px; }
+  .toc a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .toc a:hover { text-decoration: underline; }
+
+  /* 章节 */
+  .section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--color-primary);
+  }
+  .section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 24px 0 12px;
+  }
+  .section h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin: 16px 0 8px;
+  }
+  .section p { margin-bottom: 12px; }
+  .section ul, .section ol { padding-left: 20px; margin-bottom: 12px; }
+  .section li { margin-bottom: 4px; }
+
+  /* 表格 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+  th {
+    background: #f1f5f9;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-secondary);
+  }
+  tr:hover td { background: #f8fafc; }
+
+  /* 标签 */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  .badge-success { background: var(--color-success-light); color: var(--color-success); }
+  .badge-warning { background: var(--color-warning-light); color: var(--color-warning); }
+  .badge-danger { background: var(--color-danger-light); color: var(--color-danger); }
+  .badge-info { background: var(--color-primary-light); color: var(--color-primary); }
+
+  /* 卡片网格 */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    background: var(--color-surface);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .card-score {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-top: 4px;
+  }
+
+  /* 进度条 */
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+  .progress-fill.low { background: var(--color-danger); }
+  .progress-fill.mid { background: var(--color-warning); }
+  .progress-fill.high { background: var(--color-success); }
+
+  /* 时间线 */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+    margin: 20px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: var(--color-border);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+    padding-left: 20px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+  .timeline-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .timeline-desc {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+  }
+
+  /* 代码块 */
+  .code-block {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 12px 0;
+    white-space: pre;
+  }
+
+  /* 警告框 */
+  .alert {
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    margin: 12px 0;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 18px; flex-shrink: 0; }
+  .alert-danger { background: var(--color-danger-light); border-left: 3px solid var(--color-danger); }
+  .alert-warning { background: var(--color-warning-light); border-left: 3px solid var(--color-warning); }
+  .alert-info { background: var(--color-primary-light); border-left: 3px solid var(--color-primary); }
+  .alert-success { background: var(--color-success-light); border-left: 3px solid var(--color-success); }
+
+  /* 页脚 */
+  .footer {
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .topbar { padding: 32px 16px; }
+    .topbar h1 { font-size: 24px; }
+    .main { padding: 20px 16px 48px; }
+    .section { padding: 20px 16px; }
+    .toc ol { columns: 1; }
+    .card-grid { grid-template-columns: 1fr; }
+    table { font-size: 13px; }
+    th, td { padding: 8px 10px; }
+    .topbar .meta-row { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶栏 -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <h1>SmartInsight Global V2.0 版本升级计划</h1>
+    <div class="subtitle">智察全球 — 从功能原型到生产级智能情报分析平台</div>
+    <div class="meta-row">
+      <span>项目: SmartInsight Global</span>
+      <span>当前版本: V1.5.0</span>
+      <span>目标版本: V2.0.0</span>
+      <span>编写日期: 2026-11-25</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- 目录 -->
+<div class="toc">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#sec1">项目现状分析</a></li>
+    <li><a href="#sec2">现有功能详细评估</a></li>
+    <li><a href="#sec3">关键问题和不足</a></li>
+    <li><a href="#sec4">V2.0 版本升级计划</a></li>
+    <li><a href="#sec5">技术架构改进</a></li>
+    <li><a href="#sec6">风险管理</a></li>
+    <li><a href="#sec7">成功指标</a></li>
+    <li><a href="#sec8">附录</a></li>
+  </ol>
+</div>
+
+<!-- 一、项目现状分析 -->
+<div class="section" id="sec1">
+  <h2>一、项目现状分析</h2>
+
+  <h3>1.1 项目概览</h3>
+  <p>SmartInsight Global 是一个智能化的全球资讯采集与分析平台，当前版本 V1.5.0 已经建立了完善的后端架构，包括 17+ 国际主流媒体 RSS 新闻采集、6 大国产 LLM 智能分析引擎、JWT 认证 + RBAC 权限控制等核心功能。</p>
+
+  <h3>1.2 技术栈现状</h3>
+  <table>
+    <thead>
+      <tr><th>层次</th><th>技术</th><th>版本</th><th>状态</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>后端框架</td><td>FastAPI</td><td>最新</td><td><span class="badge badge-success">良好</span></td></tr>
+      <tr><td>数据库</td><td>PostgreSQL</td><td>15</td><td><span class="badge badge-success">良好</span></td></tr>
+      <tr><td>缓存</td><td>Redis</td><td>7</td><td><span class="badge badge-success">良好</span></td></tr>
+      <tr><td>ORM</td><td>SQLAlchemy (Async)</td><td>2.x</td><td><span class="badge badge-success">良好</span></td></tr>
+      <tr><td>任务队列</td><td>Celery + Beat</td><td>5.x</td><td><span class="badge badge-success">良好</span></td></tr>
+      <tr><td>前端框架</td><td>Next.js</td><td>16</td><td><span class="badge badge-danger">目录空</span></td></tr>
+      <tr><td>移动端</td><td>React Native</td><td>0.72</td><td><span class="badge badge-warning">骨架代码</span></td></tr>
+      <tr><td>CI/CD</td><td>GitHub Actions</td><td>-</td><td><span class="badge badge-warning">待修复</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>1.3 代码规模统计</h3>
+  <table>
+    <thead>
+      <tr><th>模块</th><th>文件数</th><th>代码行数</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>后端核心 (app/)</td><td>~40</td><td>~17,500</td><td>主要业务逻辑</td></tr>
+      <tr><td>后端测试 (tests/)</td><td>~15</td><td>~3,200</td><td>测试套件</td></tr>
+      <tr><td>移动端骨架 (mobile/)</td><td>~12</td><td>~1,000</td><td>仅有骨架组件</td></tr>
+      <tr><td>配置/脚本</td><td>~10</td><td>~800</td><td>Docker/CI/CD/备份</td></tr>
+      <tr><td>文档</td><td>27</td><td>-</td><td>多版本开发文档</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 二、功能评估 -->
+<div class="section" id="sec2">
+  <h2>二、现有功能详细评估</h2>
+
+  <h3>2.1 核心功能评分</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">RSS 新闻采集引擎</div>
+      <div class="card-score">4/5</div>
+      <div class="card-desc">17+ 源，异步并发，自动去重</div>
+      <div class="progress-bar"><div class="progress-fill high" style="width:80%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">多 LLM 统一客户端</div>
+      <div class="card-score">5/5</div>
+      <div class="card-desc">6 大厂商统一 OpenAI 兼容接口</div>
+      <div class="progress-bar"><div class="progress-fill high" style="width:100%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">高级 NLP 分析</div>
+      <div class="card-score">4/5</div>
+      <div class="card-desc">NER、关系抽取、趋势预测一体化</div>
+      <div class="progress-bar"><div class="progress-fill high" style="width:80%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">JWT 认证系统</div>
+      <div class="card-score">4/5</div>
+      <div class="card-desc">完整的用户/会话/审计日志</div>
+      <div class="progress-bar"><div class="progress-fill high" style="width:80%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Web 前端</div>
+      <div class="card-score">0/5</div>
+      <div class="card-desc">目录为空，需完整重建</div>
+      <div class="progress-bar"><div class="progress-fill low" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">移动端 App</div>
+      <div class="card-score">1/5</div>
+      <div class="card-desc">仅骨架代码，RN 0.72 过时</div>
+      <div class="progress-bar"><div class="progress-fill low" style="width:20%"></div></div>
+    </div>
+  </div>
+
+  <h3>2.2 后端架构优点</h3>
+  <ul>
+    <li><strong>模块化设计</strong>：API 路由按功能拆分，职责清晰</li>
+    <li><strong>异步架构</strong>：全链路异步 I/O（FastAPI + asyncpg + httpx）</li>
+    <li><strong>统一 LLM 接口</strong>：LLMClient 类设计优雅，支持多厂商切换和 Mock 回退</li>
+    <li><strong>高级 NLP 分析</strong>：AdvancedNLPAnalyzer 支持多模型融合分析</li>
+    <li><strong>完善的用户模型</strong>：角色、权限、会话、访问日志、审计日志</li>
+    <li><strong>数据库迁移</strong>：Alembic 管理，5 个迁移版本有序演进</li>
+  </ul>
+
+  <h3>2.3 后端架构不足</h3>
+  <ul>
+    <li><strong>数据库连接池</strong>：使用 NullPool（无池化），高并发下性能不佳</li>
+    <li><strong>API 端点重复</strong>：存在 _simple 后缀的简化版与完整版并存，代码冗余</li>
+    <li><strong>测试文件混乱</strong>：根目录散落 test_*.py 文件</li>
+    <li><strong>缺少 API 速率限制</strong>：无请求频率控制</li>
+    <li><strong>依赖版本未锁定</strong>：requirements.txt 无版本号</li>
+    <li><strong>缺少全局异常处理</strong>：错误响应格式不统一</li>
+  </ul>
+</div>
+
+<!-- 三、关键问题 -->
+<div class="section" id="sec3">
+  <h2>三、关键问题和不足</h2>
+
+  <h3>3.1 P0 级问题（阻断性）</h3>
+  <div class="alert alert-danger">
+    <span class="alert-icon">&#9888;</span>
+    <div>以下问题直接阻断项目的正常部署和使用，必须优先解决。</div>
+  </div>
+  <table>
+    <thead>
+      <tr><th>#</th><th>问题</th><th>影响</th><th>建议</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><strong>前端代码缺失</strong></td><td>无法提供 Web 界面</td><td>完整重建 Next.js 前端</td></tr>
+      <tr><td>2</td><td><strong>后端 Dockerfile 缺失</strong></td><td>无法容器化部署</td><td>编写 Dockerfile 和构建流程</td></tr>
+      <tr><td>3</td><td><strong>依赖版本未锁定</strong></td><td>构建不可复现</td><td>锁定 requirements.txt 版本</td></tr>
+      <tr><td>4</td><td><strong>CI/CD 引用缺失文件</strong></td><td>流水线无法运行</td><td>补全测试依赖和脚本</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 P1 级问题（重要）</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>问题</th><th>影响</th><th>建议</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>5</td><td>数据库连接池使用 NullPool</td><td>高并发性能差</td><td>切换为 AsyncPool</td></tr>
+      <tr><td>6</td><td>API 端点代码冗余</td><td>维护困难</td><td>合并重复端点</td></tr>
+      <tr><td>7</td><td>缺少 API 速率限制</td><td>安全风险</td><td>引入 slowapi</td></tr>
+      <tr><td>8</td><td>缺少全局异常处理</td><td>错误响应不统一</td><td>添加异常中间件</td></tr>
+      <tr><td>9</td><td>测试文件组织混乱</td><td>维护困难</td><td>统一到 tests/ 目录</td></tr>
+      <tr><td>10</td><td>缺少 WebSocket 通知</td><td>用户体验差</td><td>实现实时推送</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 P2 级问题（改进项）</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>问题</th><th>影响</th><th>建议</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>11</td><td>LLM 随机选择 provider</td><td>结果不一致</td><td>实现智能路由</td></tr>
+      <tr><td>12</td><td>国际化功能未完整</td><td>国际用户体验</td><td>完善 i18n 支持</td></tr>
+      <tr><td>13</td><td>文档冗余</td><td>维护成本高</td><td>精简合并</td></tr>
+      <tr><td>14</td><td>移动端代码过时</td><td>移动端不可用</td><td>升级 RN 或迁移 Expo</td></tr>
+      <tr><td>15</td><td>缺少监控和可观测性</td><td>运维困难</td><td>引入 Prometheus/Grafana</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 四、升级计划 -->
+<div class="section" id="sec4">
+  <h2>四、V2.0 版本升级计划</h2>
+
+  <h3>4.1 版本目标</h3>
+  <div class="alert alert-info">
+    <span class="alert-icon">&#9733;</span>
+    <div><strong>V2.0 核心主题：</strong>从"功能原型"到"可部署的生产级平台"</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>目标</th><th>描述</th><th>优先级</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>前端完整重建</td><td>基于 Next.js 16 重建全部页面和组件</td><td><span class="badge badge-danger">P0</span></td></tr>
+      <tr><td>后端架构优化</td><td>连接池、错误处理、代码整理</td><td><span class="badge badge-danger">P0</span></td></tr>
+      <tr><td>容器化部署</td><td>补全 Dockerfile、Nginx 配置</td><td><span class="badge badge-danger">P0</span></td></tr>
+      <tr><td>WebSocket 实时通知</td><td>新闻更新和分析结果实时推送</td><td><span class="badge badge-warning">P1</span></td></tr>
+      <tr><td>测试覆盖率 &ge; 70%</td><td>完善单元/集成/E2E 测试</td><td><span class="badge badge-warning">P1</span></td></tr>
+      <tr><td>LLM 智能路由</td><td>基于负载/成本/质量的模型选择</td><td><span class="badge badge-warning">P1</span></td></tr>
+      <tr><td>安全加固</td><td>速率限制、CORS 优化、输入验证</td><td><span class="badge badge-warning">P1</span></td></tr>
+      <tr><td>多租户架构</td><td>数据隔离、租户管理</td><td><span class="badge badge-info">P2</span></td></tr>
+      <tr><td>移动端升级</td><td>RN 新架构或 Expo</td><td><span class="badge badge-info">P2</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 阶段规划</h3>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-title">阶段一：基础修复与后端优化（V1.6）</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>依赖版本锁定，创建 requirements-dev.txt 和 requirements-test.txt</li>
+          <li>数据库连接池优化：NullPool → AsyncAdaptedQueuePool</li>
+          <li>全局异常处理中间件，统一 API 错误响应格式</li>
+          <li>合并重复 API 端点（_simple 版本 → 正式版本）</li>
+          <li>测试文件整理（根目录 → tests/）</li>
+          <li>编写后端 Dockerfile（多阶段构建）</li>
+          <li>引入 slowapi 请求限流</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-title">阶段二：前端完整重建（V1.7）</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>基于 Next.js 16 (App Router) + React 19 + TailwindCSS v4 重建</li>
+          <li>13+ 页面：首页/登录/注册/新闻详情/地图/时间轴/搜索/仪表盘/分析/报告/资料/设置/历史</li>
+          <li>Shadcn/UI 组件库 + Zustand 状态管理</li>
+          <li>全响应式设计（桌面 + 移动端）</li>
+          <li>暗色/亮色主题、骨架屏、懒加载、SSR/SSG</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-title">阶段三：实时通信与高级功能（V1.8）</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>WebSocket 实时推送（新闻采集/分析完成通知）</li>
+          <li>LLM 智能路由策略（健康检查/负载均衡/熔断器）</li>
+          <li>高级搜索和多维度组合筛选</li>
+          <li>多格式数据导出（PDF/Excel/JSON/CSV）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-title">阶段四：生产部署与质量保障（V1.9）</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>后端测试覆盖率 &ge; 80%，前端 &ge; 70%</li>
+          <li>E2E 测试（Playwright）、性能测试（Locust）</li>
+          <li>Prometheus + Grafana 监控、结构化日志</li>
+          <li>修复 GitHub Actions CI/CD</li>
+          <li>Nginx 反向代理配置（SSL/TLS + WebSocket）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-title">阶段五：企业级功能（V2.0）</div>
+      <div class="timeline-desc">
+        <ul>
+          <li>多租户架构（数据隔离 + 租户管理 + 计费）</li>
+          <li>订阅支付系统（免费/专业/企业）</li>
+          <li>移动端升级（RN 新架构或 Expo）</li>
+          <li>高可用部署（K8s + 数据库主从 + Redis Cluster + CDN）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.3 前端页面规划</h3>
+  <table>
+    <thead>
+      <tr><th>页面</th><th>路由</th><th>功能</th><th>阶段</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>首页</td><td>/</td><td>新闻列表、筛选、分页</td><td>V1.7</td></tr>
+      <tr><td>登录</td><td>/login</td><td>用户登录</td><td>V1.7</td></tr>
+      <tr><td>注册</td><td>/register</td><td>用户注册</td><td>V1.7</td></tr>
+      <tr><td>新闻详情</td><td>/news/[id]</td><td>新闻详情 + AI 分析结果</td><td>V1.7</td></tr>
+      <tr><td>全球热点地图</td><td>/map</td><td>全球新闻地理分布</td><td>V1.7</td></tr>
+      <tr><td>事件时间轴</td><td>/events</td><td>事件聚类与脉络</td><td>V1.7</td></tr>
+      <tr><td>搜索</td><td>/search</td><td>全文搜索</td><td>V1.7</td></tr>
+      <tr><td>数据仪表盘</td><td>/dashboard</td><td>可视化图表</td><td>V1.7</td></tr>
+      <tr><td>高级分析</td><td>/analysis</td><td>AI 深度分析工具</td><td>V1.7</td></tr>
+      <tr><td>报告生成</td><td>/reports</td><td>分析报告管理</td><td>V1.7</td></tr>
+      <tr><td>个人资料</td><td>/profile</td><td>用户资料管理</td><td>V1.7</td></tr>
+      <tr><td>设置</td><td>/settings</td><td>账户/通知/外观设置</td><td>V1.7</td></tr>
+      <tr><td>分析历史</td><td>/history</td><td>历史记录管理</td><td>V1.7</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 五、技术架构 -->
+<div class="section" id="sec5">
+  <h2>五、技术架构改进</h2>
+
+  <h3>5.1 数据库连接池优化</h3>
+  <div class="code-block">当前: NullPool（无连接池）
+改进: AsyncAdaptedQueuePool
+  - pool_size: 10
+  - max_overflow: 20
+  - pool_timeout: 30
+  - pool_recycle: 3600</div>
+
+  <h3>5.2 API 响应统一格式</h3>
+  <div class="code-block">{
+  "code": 200,
+  "message": "success",
+  "data": { ... },
+  "meta": {
+    "page": 1,
+    "page_size": 20,
+    "total": 100
+  }
+}</div>
+
+  <h3>5.3 LLM 智能路由架构</h3>
+  <div class="code-block">请求 → LLMRouter
+         ├── 健康检查: 过滤不可用 provider
+         ├── 负载均衡: 选择响应时间最短的 provider
+         ├── 成本控制: 优先选择低成本模型
+         ├── 质量保障: 关键分析使用高质量模型
+         └── 熔断器: 连续失败自动切换</div>
+
+  <h3>5.4 前端目录结构设计</h3>
+  <div class="code-block">app/
+├── (auth)/           # 认证页面
+│   ├── login/
+│   └── register/
+├── (main)/           # 功能页面
+│   ├── page.tsx      # 首页
+│   ├── news/[id]/    # 新闻详情
+│   ├── map/          # 全球热点地图
+│   ├── events/       # 事件时间轴
+│   ├── search/       # 搜索
+│   ├── dashboard/    # 仪表盘
+│   ├── analysis/     # 高级分析
+│   ├── reports/      # 报告
+│   ├── history/      # 分析历史
+│   ├── profile/      # 个人资料
+│   └── settings/     # 设置
+├── components/       # 共享组件
+├── hooks/            # 自定义 Hooks
+├── lib/              # 工具函数
+├── stores/           # Zustand 状态管理
+├── types/            # TypeScript 类型
+└── styles/           # 全局样式</div>
+</div>
+
+<!-- 六、风险管理 -->
+<div class="section" id="sec6">
+  <h2>六、风险管理</h2>
+
+  <table>
+    <thead>
+      <tr><th>风险</th><th>概率</th><th>影响</th><th>缓解措施</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>前端重建工作量大</td><td><span class="badge badge-danger">高</span></td><td><span class="badge badge-danger">高</span></td><td>分阶段交付，优先核心页面</td></tr>
+      <tr><td>LLM API 不稳定</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-danger">高</span></td><td>多 provider 冗余 + 熔断机制</td></tr>
+      <tr><td>数据库迁移风险</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-danger">高</span></td><td>完整备份 + 回滚脚本</td></tr>
+      <tr><td>RN 版本过时</td><td><span class="badge badge-info">低</span></td><td><span class="badge badge-warning">中</span></td><td>评估 Expo 或 Flutter</td></tr>
+      <tr><td>多租户数据隔离</td><td><span class="badge badge-warning">中</span></td><td><span class="badge badge-danger">高</span></td><td>充分测试 + 安全审计</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 七、成功指标 -->
+<div class="section" id="sec7">
+  <h2>七、成功指标</h2>
+
+  <table>
+    <thead>
+      <tr><th>指标</th><th>当前值</th><th>V2.0 目标</th><th>进度</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>功能完成度</td><td>60%</td><td>95%+</td>
+        <td><div class="progress-bar"><div class="progress-fill mid" style="width:60%"></div></div></td>
+      </tr>
+      <tr>
+        <td>后端测试覆盖率</td><td>~45%</td><td>&ge; 80%</td>
+        <td><div class="progress-bar"><div class="progress-fill mid" style="width:45%"></div></div></td>
+      </tr>
+      <tr>
+        <td>前端测试覆盖率</td><td>0%</td><td>&ge; 70%</td>
+        <td><div class="progress-bar"><div class="progress-fill low" style="width:0%"></div></div></td>
+      </tr>
+      <tr>
+        <td>API 响应时间 (P95)</td><td>未测量</td><td>&lt; 200ms</td>
+        <td><div class="progress-bar"><div class="progress-fill low" style="width:10%"></div></div></td>
+      </tr>
+      <tr>
+        <td>页面首屏加载</td><td>N/A</td><td>&lt; 2s</td>
+        <td><div class="progress-bar"><div class="progress-fill low" style="width:0%"></div></div></td>
+      </tr>
+      <tr>
+        <td>容器化部署</td><td>不可用</td><td>一键部署</td>
+        <td><div class="progress-bar"><div class="progress-fill low" style="width:20%"></div></div></td>
+      </tr>
+      <tr>
+        <td>安全扫描</td><td>未执行</td><td>零高危漏洞</td>
+        <td><div class="progress-bar"><div class="progress-fill low" style="width:10%"></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 八、附录 -->
+<div class="section" id="sec8">
+  <h2>八、附录</h2>
+
+  <h3>A. 现有 API 端点清单</h3>
+  <table>
+    <thead>
+      <tr><th>模块</th><th>端点数</th><th>状态</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>News</td><td>4</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>LLM</td><td>3</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Map</td><td>3</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Events</td><td>2</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Auth</td><td>4+</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Scheduler</td><td>2</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Preferences</td><td>4</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Analysis History</td><td>5</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Reports</td><td>3+</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>Advanced Analysis</td><td>3+</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td>i18n</td><td>2</td><td><span class="badge badge-success">可用</span></td></tr>
+      <tr><td><strong>总计</strong></td><td><strong>~35</strong></td><td>-</td></tr>
+    </tbody>
+  </table>
+
+  <h3>B. 后端核心模块列表</h3>
+  <table>
+    <thead>
+      <tr><th>模块</th><th>路径</th><th>代码行数</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>analyzer.py</td><td>app/core/</td><td>480</td><td>新闻分析引擎</td></tr>
+      <tr><td>advanced_nlp.py</td><td>app/core/</td><td>787</td><td>高级 NLP 分析</td></tr>
+      <tr><td>llm_client.py</td><td>app/core/</td><td>206</td><td>LLM 统一客户端</td></tr>
+      <tr><td>report_generator.py</td><td>app/core/</td><td>778</td><td>报告生成</td></tr>
+      <tr><td>geo_heatmap.py</td><td>app/core/</td><td>793</td><td>地理热力图</td></tr>
+      <tr><td>auth.py</td><td>app/core/</td><td>448</td><td>认证模块</td></tr>
+      <tr><td>crawler.py</td><td>app/core/</td><td>90</td><td>RSS 爬虫</td></tr>
+      <tr><td>worker.py</td><td>app/</td><td>279</td><td>Celery 任务</td></tr>
+      <tr><td>news.py</td><td>app/models/</td><td>63</td><td>新闻数据模型</td></tr>
+      <tr><td>user.py</td><td>app/models/</td><td>268</td><td>用户数据模型</td></tr>
+    </tbody>
+  </table>
+
+  <h3>C. 数据库迁移历史</h3>
+  <table>
+    <thead>
+      <tr><th>版本</th><th>文件标识</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>f56b995b94be</td><td>初始迁移</td></tr>
+      <tr><td>2</td><td>56c2fcd4793d</td><td>添加全文搜索索引</td></tr>
+      <tr><td>3</td><td>ff7e7a245174</td><td>添加 location 字段</td></tr>
+      <tr><td>4</td><td>a659dd78ca66</td><td>添加用户和认证表</td></tr>
+      <tr><td>5</td><td>2f3078d11242</td><td>添加高级分析字段</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>SmartInsight Global V2.0 版本升级计划 | 编写日期: 2026-11-25 | 文档版本 1.0</p>
+  <p>GitHub: <a href="https://github.com/JING-XINXING/SmartInsightGlobal" style="color:var(--color-primary)">JING-XINXING/SmartInsightGlobal</a></p>
+</div>
+
+</body>
+</html>
