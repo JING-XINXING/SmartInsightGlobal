@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] - 2026-11-25
+
+### Added
+
+- 重建 Web 前端：新闻流、详情、搜索、地图、事件、仪表盘、分析、报告、历史、设置、登录和注册
+- 前端开发端口 `18421`，生产容器同样监听该端口
+- 前端 Dockerfile
+
+### Fixed
+
+- `require_permission` 改为直接校验当前用户，修复高级分析和地图接口把权限函数当成装饰器调用的问题
+
+---
+
 ## [1.6.0] - 2026-11-25
 
 ### Added

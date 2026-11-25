@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![Next.js](https://img.shields.io/badge/next.js-16-black.svg)
-![Status](https://img.shields.io/badge/status-V1.6.0%20Released-green.svg)
+![Status](https://img.shields.io/badge/status-V1.7.0%20Released-green.svg)
 
 ## 📖 项目简介
 
@@ -135,7 +135,7 @@ cd frontend
 npm install
 
 # 启动开发服务器
-npm run dev
+npm run dev -- -p 18421
 ```
 
 #### 5. 启动 Celery Worker (定时任务)
@@ -154,17 +154,17 @@ celery -A app.worker.celery_app beat --loglevel=info
 
 | 页面 | 地址 | 说明 |
 |------|------|------|
-| 首页 | http://localhost:3001 | 新闻列表（分页） |
-| 登录 | http://localhost:3001/login | 用户登录 |
-| 注册 | http://localhost:3001/register | 用户注册 |
-| 热点地图 | http://localhost:3001/map | 全球新闻地理分布 |
-| 事件时间轴 | http://localhost:3001/events | 事件聚类与脉络 |
-| 搜索 | http://localhost:3001/search | 全文搜索 |
-| 数据分析 | http://localhost:3001/dashboard | 可视化仪表盘 |
-| 高级分析 | http://localhost:3001/analysis | AI 深度分析工具 |
-| 报告生成 | http://localhost:3001/reports | 分析报告生成 |
-| 个人资料 | http://localhost:3001/profile | 用户资料管理 |
-| 设置 | http://localhost:3001/settings | 账户设置 |
+| 首页 | http://localhost:18421 | 新闻列表（分页） |
+| 登录 | http://localhost:18421/login | 用户登录 |
+| 注册 | http://localhost:18421/register | 用户注册 |
+| 热点地图 | http://localhost:18421/map | 全球新闻地理分布 |
+| 事件时间轴 | http://localhost:18421/events | 事件聚类与脉络 |
+| 搜索 | http://localhost:18421/search | 全文搜索 |
+| 数据分析 | http://localhost:18421/dashboard | 可视化仪表盘 |
+| 高级分析 | http://localhost:18421/analysis | AI 深度分析工具 |
+| 报告生成 | http://localhost:18421/reports | 分析报告生成 |
+| 个人资料 | http://localhost:18421/profile | 用户资料管理 |
+| 设置 | http://localhost:18421/settings | 账户设置 |
 | API 文档 | http://localhost:18080/docs | Swagger API 文档 |
 
 ### 默认账户
@@ -438,8 +438,8 @@ MIT License
 ---
 
 **最后更新**: 2026-11-25  
-**当前版本**: V1.6.0 (已发布)  
-**下一版本**: V1.7 (计划中)
+**当前版本**: V1.7.0 (已发布)  
+**下一版本**: V1.8 (计划中)
 
 ## 🎯 V1.5.0 更新亮点
 

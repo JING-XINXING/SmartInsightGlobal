@@ -4,4 +4,4 @@
 """
 
 APP_NAME: str = "SmartInsight Global"
-APP_VERSION: str = "1.6.0"
+APP_VERSION: str = "1.7.0"

@@ -1,7 +1,7 @@
 """
 SmartInsight Global - 全球智能情报分析系统
 后端 API 服务入口
-版本: V1.6.0
+版本: V1.7.0
 """
 import logging
 from contextlib import asynccontextmanager
@@ -48,7 +48,7 @@ app = FastAPI(
 * **用户管理** - 认证、授权、偏好设置
 
 ### API 版本
-当前版本: V1.6.0
+当前版本: V1.7.0
     """,
     version=APP_VERSION,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",

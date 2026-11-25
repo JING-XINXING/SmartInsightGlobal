@@ -139,11 +139,11 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://backend:18080/api/v1}
     ports:
-      - "${FRONTEND_PORT:-18421}:3000"
+      - "${FRONTEND_PORT:-18421}:18421"
     depends_on:
       - backend
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:18421"]
       interval: 30s
       timeout: 10s
       retries: 3

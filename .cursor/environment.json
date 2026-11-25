@@ -1,7 +1,7 @@
 {
   "$schema": "https://cursor.com/schema/environment.json",
-  "install": "cd backend && pip install -r requirements.txt && echo 'Backend dependencies installed'",
-  "start": "cd backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 18080 &",
+  "install": "cd backend && pip install -r requirements.txt && cd ../frontend && npm install",
+  "start": "cd backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 18080 & cd frontend && npm run dev -- --hostname 0.0.0.0",
   "egressAllowlist": [
     "api.deepseek.com",
     "api.moonshot.cn",
