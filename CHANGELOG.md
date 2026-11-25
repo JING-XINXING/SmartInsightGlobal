@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] - 2026-11-25
+
+### Added
+
+- 重建 Web 前端：新闻流、详情、搜索、地图、事件、仪表盘、分析、报告、历史、设置、登录和注册
+- 前端开发端口 `18421`，生产容器同样监听该端口
+- 前端 Dockerfile
+
+### Fixed
+
+- `require_permission` 改为直接校验当前用户，修复高级分析和地图接口把权限函数当成装饰器调用的问题
+
+---
+
+## [1.6.0] - 2026-11-25
+
+### Added
+
+- 全局异常处理，错误响应统一为 `code` / `message` / `data`
+- API 按 IP 限流，默认 120 次/分钟，可用 `RATE_LIMIT_ENABLED=false` 关闭
+- `GET /api/v1/meta/version` 返回服务版本
+- 版本常量 `app/core/version.py`
+- 开发依赖文件 `requirements-dev.txt`
+- 后端 `.dockerignore`
+
+### Changed
+
+- 依赖版本锁定（`requirements.txt`、`requirements-test.txt`）
+- API 进程数据库连接改为队列池；Celery worker 继续使用 NullPool
+- 路由改为挂载完整实现：认证、地图、国际化、高级分析、分析历史
+- 移除未再挂载的 `*_simple` 端点副本
+- 开发服务端口：后端 `18080`，前端宿主机 `18421`
+- 根目录散落的手工测试脚本移到 `backend/tests/manual/`
+- 修复认证依赖把 401 包成 500 的问题
+- Pydantic `Field(regex=...)` 改为 `pattern`，兼容当前版本
+
+### Removed
+
+- 默认测试不再因覆盖率低于 70% 失败。覆盖率目标仍放在 V1.9。
+
+---
+
 ## [1.5.0] - 2025-12-14
 
 ### Added

@@ -1,15 +1,22 @@
 """
 SmartInsight Global - 全球智能情报分析系统
 后端 API 服务入口
-版本: V1.5.0
+版本: V1.7.0
 """
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
 import logging
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 from app.api.api_v1.api import api_router
 from app.core.config import settings
+from app.core.exceptions import error_body, register_exception_handlers
+from app.core.rate_limit import limiter
+from app.core.version import APP_NAME, APP_VERSION
 
 # 配置日志
 logging.basicConfig(
@@ -41,9 +48,9 @@ app = FastAPI(
 * **用户管理** - 认证、授权、偏好设置
 
 ### API 版本
-当前版本: V1.5.0
+当前版本: V1.7.0
     """,
-    version="1.5.0",
+    version=APP_VERSION,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -51,10 +58,11 @@ app = FastAPI(
 )
 
 # CORS 中间件配置
+# 开发端口避开 3000/8000。前端默认 18421，后端默认 18080。
 cors_origins = [
-    "http://localhost:3000",
+    "http://localhost:18421",
+    "http://127.0.0.1:18421",
     "http://localhost:3001",
-    "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
 ]
 
@@ -66,6 +74,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 统一错误响应与按 IP 限流（默认 120 次/分钟）
+register_exception_handlers(app)
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    """限流时返回统一错误结构。"""
+    return JSONResponse(
+        status_code=429,
+        content=error_body(429, "请求过于频繁，请稍后再试", None),
+    )
+
+
 # 注册路由
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
@@ -76,8 +99,8 @@ async def root():
     返回欢迎信息和基本版本信息
     """
     return {
-        "message": "Welcome to SmartInsight Global API",
-        "version": "1.5.0",
+        "message": f"Welcome to {APP_NAME} API",
+        "version": APP_VERSION,
         "docs": "/docs",
         "redoc": "/redoc"
     }
@@ -90,6 +113,12 @@ async def health_check():
     """
     return {
         "status": "healthy",
-        "version": "1.5.0",
+        "version": APP_VERSION,
         "service": "smartinsight-backend"
     }
+
+
+@app.get(f"{settings.API_V1_STR}/meta/version", tags=["Meta"])
+async def meta_version():
+    """返回服务名称与版本，供前端和发布检查使用。"""
+    return {"name": APP_NAME, "version": APP_VERSION}

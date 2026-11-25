@@ -55,15 +55,15 @@ class MapDataResponse(BaseModel):
 class HeatmapRequest(BaseModel):
     """热力图请求模型"""
     bbox: Optional[List[float]] = Field(None, description="边界框 [min_lat, min_lng, max_lat, max_lng]")
-    time_range: str = Field("day", regex="^(hour|day|week|month)$", description="时间范围")
-    grid_type: str = Field("global", regex="^(global|regional|city)$", description="网格类型")
+    time_range: str = Field("day", pattern="^(hour|day|week|month)$", description="时间范围")
+    grid_type: str = Field("global", pattern="^(global|regional|city)$", description="网格类型")
     sentiment_filter: Optional[List[int]] = Field(None, description="情感分数范围 [min, max]")
 
 
 class GeographicAnalysisRequest(BaseModel):
     """地理分析请求模型"""
     region: Optional[str] = Field(None, description="特定地区筛选")
-    time_range: str = Field("week", regex="^(hour|day|week|month)$", description="时间范围")
+    time_range: str = Field("week", pattern="^(hour|day|week|month)$", description="时间范围")
 
 
 @router.get("/news-locations", response_model=List[NewsLocation])
@@ -349,8 +349,8 @@ async def get_realtime_heatmap(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(session.get_db),
     bbox: Optional[str] = Query(None, description="边界框，格式：min_lat,min_lng,max_lat,max_lng"),
-    time_range: str = Query("day", regex="^(hour|day|week|month)$", description="时间范围"),
-    grid_type: str = Query("global", regex="^(global|regional|city)$", description="网格类型")
+    time_range: str = Query("day", pattern="^(hour|day|week|month)$", description="时间范围"),
+    grid_type: str = Query("global", pattern="^(global|regional|city)$", description="网格类型")
 ):
     """
     获取实时热力图（GET方式）
@@ -425,7 +425,7 @@ async def get_current_hotspots(
     db: AsyncSession = Depends(session.get_db),
     limit: int = Query(20, ge=5, le=100, description="热点数量限制"),
     min_intensity: float = Query(0.1, ge=0.0, le=1.0, description="最小强度阈值"),
-    time_range: str = Query("day", regex="^(hour|day|week|month)$", description="时间范围")
+    time_range: str = Query("day", pattern="^(hour|day|week|month)$", description="时间范围")
 ):
     """
     获取当前热点区域
@@ -465,7 +465,7 @@ async def get_current_hotspots(
 async def get_regional_sentiment(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(session.get_db),
-    time_range: str = Query("week", regex="^(hour|day|week|month)$", description="时间范围")
+    time_range: str = Query("week", pattern="^(hour|day|week|month)$", description="时间范围")
 ):
     """
     获取各地区情感分布
@@ -515,7 +515,7 @@ async def get_event_clustering(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(session.get_db),
     min_cluster_size: int = Query(3, ge=2, le=20, description="最小聚类大小"),
-    time_range: str = Query("day", regex="^(hour|day|week|month)$", description="时间范围")
+    time_range: str = Query("day", pattern="^(hour|day|week|month)$", description="时间范围")
 ):
     """
     获取事件聚类分析
@@ -560,7 +560,7 @@ async def get_event_clustering(
 async def get_advanced_map_statistics(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(session.get_db),
-    time_range: str = Query("week", regex="^(hour|day|week|month)$", description="时间范围")
+    time_range: str = Query("week", pattern="^(hour|day|week|month)$", description="时间范围")
 ):
     """
     获取高级地图统计数据

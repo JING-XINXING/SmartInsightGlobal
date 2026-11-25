@@ -1,11 +1,28 @@
 """
 测试新闻API端点
 """
+import socket
+
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.future import select
 from app.models.news import News
 from app.schemas.news import NewsCreate
+
+
+def _postgres_available() -> bool:
+    """本机 5432 没有服务时，新闻接口用例无法执行。"""
+    try:
+        with socket.create_connection(("127.0.0.1", 5432), timeout=0.3):
+            return True
+    except OSError:
+        return False
+
+
+pytestmark = pytest.mark.skipif(
+    not _postgres_available(),
+    reason="PostgreSQL 未启动，跳过新闻接口测试",
+)
 
 
 @pytest.mark.api

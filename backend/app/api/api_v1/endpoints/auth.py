@@ -122,18 +122,9 @@ async def get_current_user(
 
         return user
 
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    except jwt.InvalidTokenError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    except HTTPException:
+        # verify_token 已把令牌错误转成 401，不能再包成 500
+        raise
     except Exception as e:
         logger.error(f"Authentication error: {e}")
         raise HTTPException(
@@ -142,27 +133,18 @@ async def get_current_user(
         )
 
 
-def require_permission(permission: str):
-    """权限装饰器"""
-    def decorator(func):
-        async def wrapper(*args, **kwargs):
-            # 从kwargs中获取当前用户
-            current_user = kwargs.get("current_user")
-            if not current_user:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Authentication required"
-                )
-
-            if not current_user.has_permission(permission):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail=f"Permission denied: {permission} required"
-                )
-
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
+def require_permission(current_user: User, permission: str) -> None:
+    """缺少权限时直接拒绝。调用方已经通过依赖拿到当前用户。"""
+    if current_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+        )
+    if not current_user.has_permission(permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Permission denied: {permission} required",
+        )
 
 
 @router.post("/register", response_model=UserResponse)

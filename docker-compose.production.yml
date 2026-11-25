@@ -64,7 +64,7 @@ services:
       - ENVIRONMENT=production
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
+      - "${BACKEND_PORT:-18080}:18080"
     volumes:
       - ./backend/logs:/app/logs
       - ./backend/reports:/app/reports
@@ -74,7 +74,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:18080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -133,17 +133,17 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:18080/api/v1}
     container_name: smartinsight-frontend
     restart: unless-stopped
     environment:
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://backend:8000/api/v1}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://backend:18080/api/v1}
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-18421}:18421"
     depends_on:
       - backend
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:18421"]
       interval: 30s
       timeout: 10s
       retries: 3

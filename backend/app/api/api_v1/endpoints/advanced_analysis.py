@@ -60,7 +60,7 @@ class SentimentTrendRequest(BaseModel):
     title: str
     content: str
     historical_sentiments: Optional[List[float]] = None
-    prediction_horizon: str = Field("short_term", regex="^(short_term|medium_term|long_term)$")
+    prediction_horizon: str = Field("short_term", pattern="^(short_term|medium_term|long_term)$")
 
 
 class BatchAnalysisRequest(BaseModel):

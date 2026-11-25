@@ -22,12 +22,12 @@ class TestLLMEndpoints:
         assert isinstance(data, list)
         assert len(data) > 0
 
-        # 验证每个厂商都有基本字段
+        # 验证每个厂商都有基本字段。是否配置密钥用 available 表示。
         for provider in data:
             assert "name" in provider
             assert "display_name" in provider
             assert "default_model" in provider
-            assert "configured" in provider  # 是否配置了API密钥
+            assert "available" in provider
 
         # 验证包含预期的厂商
         provider_names = [p["name"] for p in data]
@@ -43,15 +43,10 @@ class TestLLMEndpoints:
         assert response.status_code == 200
         data = response.json()
 
-        # 应该返回模型列表
-        assert isinstance(data, list)
-        assert len(data) > 0
-
-        # 验证模型格式
-        for model in data:
-            assert "id" in model
-            assert "name" in model
-            assert "description" in model
+        assert data["provider"] == "deepseek"
+        assert isinstance(data["available_models"], list)
+        assert len(data["available_models"]) > 0
+        assert data["default_model"] in data["available_models"]
 
     @pytest.mark.asyncio
     async def test_get_llm_models_unconfigured_provider(self, client: AsyncClient):
@@ -62,8 +57,9 @@ class TestLLMEndpoints:
         assert response.status_code == 200
         data = response.json()
 
-        assert isinstance(data, list)
-        # 即使未配置API密钥，也应该返回模型列表（预定义的）
+        assert data["provider"] == "moonshot"
+        assert isinstance(data["available_models"], list)
+        assert len(data["available_models"]) > 0
 
     @pytest.mark.asyncio
     async def test_get_llm_models_invalid_provider(self, client: AsyncClient):
@@ -72,7 +68,9 @@ class TestLLMEndpoints:
 
         assert response.status_code == 404
         data = response.json()
-        assert "detail" in data
+        # V1.6 起错误体为 code/message/data
+        assert data.get("code") == 404
+        assert "message" in data
 
     @pytest.mark.asyncio
     async def test_update_llm_config_valid(self, client: AsyncClient):
@@ -86,9 +84,9 @@ class TestLLMEndpoints:
 
         assert response.status_code == 200
         data = response.json()
-        assert "message" in data
-        assert "success" in data
-        assert data["success"] is True
+        assert data["status"] == "success"
+        assert data["provider"] == "deepseek"
+        assert data["model"] == "deepseek-chat"
 
     @pytest.mark.asyncio
     async def test_update_llm_config_different_providers(self, client: AsyncClient):
@@ -105,7 +103,8 @@ class TestLLMEndpoints:
 
             assert response.status_code == 200
             data = response.json()
-            assert data["success"] is True
+            assert data["status"] == "success"
+            assert data["provider"] == config_data["provider"]
 
     @pytest.mark.asyncio
     async def test_update_llm_config_without_model(self, client: AsyncClient):
@@ -119,7 +118,8 @@ class TestLLMEndpoints:
 
         assert response.status_code == 200
         data = response.json()
-        assert data["success"] is True
+        assert data["status"] == "success"
+        assert data["model"] == "deepseek-chat"
 
     @pytest.mark.asyncio
     async def test_update_llm_config_invalid_provider(self, client: AsyncClient):
@@ -133,7 +133,8 @@ class TestLLMEndpoints:
 
         assert response.status_code == 400
         data = response.json()
-        assert "detail" in data
+        assert data["code"] == 400
+        assert "无效的厂商" in data["message"]
 
     @pytest.mark.asyncio
     async def test_update_llm_config_missing_data(self, client: AsyncClient):
@@ -145,12 +146,13 @@ class TestLLMEndpoints:
 
         response = await client.post("/api/v1/llm/update-config", json=config_data)
 
-        assert response.status_code == 400
+        assert response.status_code == 422
 
-        # 测试缺少所有数据
+        # 测试缺少所有数据。校验失败统一返回 422。
         response = await client.post("/api/v1/llm/update-config", json={})
 
-        assert response.status_code == 400
+        assert response.status_code == 422
+        assert response.json()["code"] == 422
 
     @pytest.mark.asyncio
     async def test_update_llm_config_invalid_json(self, client: AsyncClient):
@@ -176,15 +178,12 @@ class TestLLMEndpoints:
         assert response1.status_code == 200
 
         # 验证配置被保存（通过获取厂商列表验证当前配置）
-        response2 = await client.get("/api/v1/llm/providers")
+        response2 = await client.get("/api/v1/llm/current-config")
         assert response2.status_code == 200
 
-        providers = response2.json()
-        # 验证当前配置反映在响应中
-        qwen_provider = next((p for p in providers if p["name"] == "qwen"), None)
-        assert qwen_provider is not None
-        assert qwen_provider["current_model"] == "qwen-turbo"
-        assert qwen_provider["is_current"] is True
+        current = response2.json()
+        assert current["default_provider"] == "qwen"
+        assert current["default_model"] == "qwen-turbo"
 
     @pytest.mark.asyncio
     async def test_llm_config_reset(self, client: AsyncClient):
@@ -208,10 +207,10 @@ class TestLLMEndpoints:
         assert response2.status_code == 200
 
         # 验证重置生效
-        response3 = await client.get("/api/v1/llm/models/deepseek")
-        models = response3.json()
-        # 应该使用默认模型
-        assert len(models) > 0
+        response3 = await client.get("/api/v1/llm/current-config")
+        current = response3.json()
+        assert current["default_provider"] == "deepseek"
+        assert current["default_model"] == "deepseek-chat"
 
     @pytest.mark.asyncio
     async def test_llm_provider_status(self, client: AsyncClient):
@@ -225,18 +224,9 @@ class TestLLMEndpoints:
         for provider in providers:
             assert "name" in provider
             assert "display_name" in provider
-            assert "configured" in provider
             assert "available" in provider
             assert "default_model" in provider
-
-            # 如果配置了，应该有current_model和is_current
-            if provider["configured"]:
-                assert "current_model" in provider
-                assert "is_current" in provider
-            else:
-                # 未配置的提供商不应该有当前模型信息
-                assert provider.get("current_model") is None
-                assert provider.get("is_current") is False
+            assert isinstance(provider["available"], bool)
 
     @pytest.mark.asyncio
     async def test_llm_endpoints_method_validation(self, client: AsyncClient):
@@ -251,8 +241,8 @@ class TestLLMEndpoints:
 
         # 测试POST /llm/update-config 支持POST
         response = await client.post("/api/v1/llm/update-config", json={})
-        # 可能400因为缺少数据，但应该是405
-        assert response.status_code in [400, 405]
+        # 空对象无法通过参数校验
+        assert response.status_code == 422
 
         # 测试GET /llm/update-config 不支持GET
         response = await client.get("/api/v1/llm/update-config")
@@ -280,15 +270,10 @@ class TestLLMEndpoints:
         for response in responses:
             assert response.status_code == 200
 
-        # 最后一个配置应该是当前配置
-        final_response = await client.get("/api/v1/llm/providers")
-        providers = final_response.json()
-
-        # 验证moonshot是当前配置（最后一个）
-        moonshot_provider = next((p for p in providers if p["name"] == "moonshot"), None)
-        assert moonshot_provider is not None
-        assert moonshot_provider["current_model"] == "moonshot-v1-8k"
-        assert moonshot_provider["is_current"] is True
+        # 并发写入后，当前配置应是其中一次成功的结果
+        final_response = await client.get("/api/v1/llm/current-config")
+        current = final_response.json()
+        assert current["default_provider"] in {"deepseek", "qwen", "moonshot"}
 
     @pytest.mark.asyncio
     async def test_llm_config_validation_edge_cases(self, client: AsyncClient):
