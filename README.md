@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![Next.js](https://img.shields.io/badge/next.js-16-black.svg)
-![Status](https://img.shields.io/badge/status-V1.5.0%20Released-green.svg)
+![Status](https://img.shields.io/badge/status-V1.6.0%20Released-green.svg)
 
 ## 📖 项目简介
 
@@ -123,7 +123,7 @@ pip install -r requirements.txt
 alembic upgrade head
 
 # 启动后端服务
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 18080
 ```
 
 #### 4. 前端设置
@@ -165,7 +165,7 @@ celery -A app.worker.celery_app beat --loglevel=info
 | 报告生成 | http://localhost:3001/reports | 分析报告生成 |
 | 个人资料 | http://localhost:3001/profile | 用户资料管理 |
 | 设置 | http://localhost:3001/settings | 账户设置 |
-| API 文档 | http://localhost:8001/docs | Swagger API 文档 |
+| API 文档 | http://localhost:18080/docs | Swagger API 文档 |
 
 ### 默认账户
 
@@ -437,9 +437,9 @@ MIT License
 
 ---
 
-**最后更新**: 2025-12-14  
-**当前版本**: V1.5.0 (已发布)  
-**下一版本**: V1.6 (计划中)
+**最后更新**: 2026-11-25  
+**当前版本**: V1.6.0 (已发布)  
+**下一版本**: V1.7 (计划中)
 
 ## 🎯 V1.5.0 更新亮点
 

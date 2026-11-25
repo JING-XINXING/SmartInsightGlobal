@@ -122,18 +122,9 @@ async def get_current_user(
 
         return user
 
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    except jwt.InvalidTokenError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    except HTTPException:
+        # verify_token 已把令牌错误转成 401，不能再包成 500
+        raise
     except Exception as e:
         logger.error(f"Authentication error: {e}")
         raise HTTPException(

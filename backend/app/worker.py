@@ -1,8 +1,11 @@
 import asyncio
-import subprocess
 import os
+import subprocess
 from pathlib import Path
-from app.core.celery_app import celery_app
+
+# 必须在导入数据库会话之前标记。worker 每个任务都会 asyncio.run 出新事件循环。
+os.environ["CELERY_WORKER"] = "1"
+from app.core.celery_app import celery_app  # noqa: E402  必须晚于环境变量
 from app.core.config import settings
 from app.core.crawler import crawler
 from app.core.logger import logger

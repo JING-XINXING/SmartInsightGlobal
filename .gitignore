@@ -33,6 +33,7 @@ ENV/
 # Pytest
 .pytest_cache/
 .coverage
+coverage.xml
 htmlcov/
 
 # IDE

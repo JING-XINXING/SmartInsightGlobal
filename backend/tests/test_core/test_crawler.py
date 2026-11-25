@@ -272,8 +272,8 @@ async def test_crawler_error_logging(caplog):
     with patch('httpx.AsyncClient.get', side_effect=Exception("测试错误")):
         await crawler.fetch_feed("http://example.com/error.xml")
 
-        # 验证错误被记录
-        assert any("Error parsing feed" in record.message for record in caplog.records)
+        # 抓取阶段失败时记录的是 fetching，而不是解析失败
+        assert any("Unexpected error fetching" in record.message for record in caplog.records)
         assert any("error.xml" in record.message for record in caplog.records)
 
 
@@ -300,7 +300,6 @@ async def test_crawler_with_redirect():
         assert len(entries) == 1
         assert entries[0]["title"] == "重定向后的新闻"
 
-        # 验证follow_redirects=True被使用
+        # follow_redirects 在客户端构造时设置，get 只带超时
         mock_get.assert_called_once()
-        call_kwargs = mock_get.call_args[1]
-        assert call_kwargs.get('follow_redirects') is True
+        assert mock_get.call_args.kwargs.get("timeout") == 15.0

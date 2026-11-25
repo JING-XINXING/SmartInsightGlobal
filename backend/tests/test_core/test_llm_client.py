@@ -1,6 +1,7 @@
 """
 测试统一LLM客户端
 """
+import json
 import pytest
 import asyncio
 from unittest.mock import Mock, AsyncMock, patch
@@ -235,9 +236,10 @@ class TestLLMClient:
 
         response = llm_client_instance._mock_response(messages)
 
-        # 应该返回数字
+        # 情感分数可以是负数，isdigit 不能覆盖负号
         assert isinstance(response, str)
-        assert response.isdigit()
+        score = int(response)
+        assert -100 <= score <= 100
 
     def test_mock_response_keywords(self, llm_client_instance):
         """测试mock关键词回复"""
@@ -248,9 +250,10 @@ class TestLLMClient:
 
         response = llm_client_instance._mock_response(messages)
 
-        # 应该返回类JSON格式
-        assert '"' in response
-        assert any(keyword in response for keyword in ["Politics", "Economy", "Global"])
+        # 关键词是随机抽样的 JSON 数组，不依赖某三个固定词
+        keywords = json.loads(response)
+        assert isinstance(keywords, list)
+        assert 1 <= len(keywords) <= 5
 
     def test_mock_response_category(self, llm_client_instance):
         """测试mock分类回复"""

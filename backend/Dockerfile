@@ -43,12 +43,12 @@ RUN mkdir -p /app/logs /app/reports \
 
 USER appuser
 
-# 暴露端口
-EXPOSE 8000
+# 容器内端口。宿主机映射使用 18080，避开常见的 8000。
+EXPOSE 18080
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:18080/health || exit 1
 
 # 启动命令
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "18080", "--workers", "2"]
