@@ -1,0 +1,33 @@
+{
+  "$schema": "https://cursor.com/schema/environment.json",
+  "install": "cd backend && pip install -r requirements.txt && echo 'Backend dependencies installed'",
+  "start": "cd backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 18080 &",
+  "egressAllowlist": [
+    "api.deepseek.com",
+    "api.moonshot.cn",
+    "dashscope.aliyuncs.com",
+    "api.baichuan-ai.com",
+    "open.bigmodel.cn",
+    "api.minimax.chat",
+    "feeds.bbci.co.uk",
+    "www.aljazeera.com",
+    "rss.nytimes.com",
+    "www.theguardian.com",
+    "feeds.reuters.com",
+    "apnews.com",
+    "rss.cnn.com",
+    "www.cnbc.com",
+    "feeds.washingtonpost.com",
+    "www.dw.com",
+    "www.france24.com",
+    "www3.nhk.or.jp",
+    "www.scmp.com",
+    "timesofindia.indiatimes.com",
+    "techcrunch.com",
+    "www.economist.com",
+    "pypi.org",
+    "files.pythonhosted.org",
+    "registry.npmjs.org",
+    "github.com"
+  ]
+}
